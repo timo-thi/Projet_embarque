@@ -1,9 +1,11 @@
-#include <Arduino.h>
 #include "init_utilities.hpp"
 
 void setup() {
   // put your setup code here, to run once:
   start_serial();
+  init_buttons();
+  init_button_interrupts();
+  initialisation_interruption_tim(100);
 }
 
 void loop() {
