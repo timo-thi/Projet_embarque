@@ -1,90 +1,69 @@
-/*
-BME280 I2C Test.ino
+#include <Adafruit_BME280.h>                            // Inclusion de la librairie BME280 d'Adafruit
 
-This code shows how to record data from the BME280 environmental sensor
-using I2C interface. This file is an example file, part of the Arduino
-BME280 library.
+// Constantes du programme
+#define adresseI2CduBME280                0x76            // Adresse I2C du BME280 (0x76, dans mon cas, ce qui est souvent la valeur par défaut)
+#define pressionAuNiveauDeLaMerEnHpa      1024.90         // https://fr.wikipedia.org/wiki/Pression_atmospherique (1013.25 hPa en moyenne, valeur "par défaut")
+#define delaiRafraichissementAffichage    1500            // Délai de rafraîchissement de l'affichage (en millisecondes)
 
-GNU General Public License
+// Instanciation de la librairie BME280
+Adafruit_BME280 bme;
 
-Written: Dec 30 2015.
-Last Updated: Oct 07 2017.
 
-Connecting the BME280 Sensor:
-Sensor              ->  Board
------------------------------
-Vin (Voltage In)    ->  3.3V
-Gnd (Ground)        ->  Gnd
-SDA (Serial Data)   ->  A4 on Uno/Pro-Mini, 20 on Mega2560/Due, 2 Leonardo/Pro-Micro
-SCK (Serial Clock)  ->  A5 on Uno/Pro-Mini, 21 on Mega2560/Due, 3 Leonardo/Pro-Micro
+// ========================
+// Initialisation programme
+// ========================
+void setup() {
+  
+  // Initialisation du port série (pour l'envoi d'infos via le moniteur série de l'IDE Arduino)
+  Serial.begin(9600);
+  while(!Serial);
+  Serial.println("Programme de test du BME280");
+  Serial.println("===========================");
+  Serial.println();
 
- */ 
-
-#include <BME280I2C.h>
-#include <Wire.h>
-
-#define SERIAL_BAUD 115200
-
-BME280I2C bme;    // Default : forced mode, standby time = 1000 ms
-                  // Oversampling = pressure ×1, temperature ×1, humidity ×1, filter off,
-
-//////////////////////////////////////////////////////////////////
-void setup()
-{
-  Serial.begin(SERIAL_BAUD);
-
-  while(!Serial) {} // Wait
-
-  Wire.begin();
-
-  while(!bme.begin())
-  {
-    Serial.println("Could not find BME280 sensor!");
-    delay(1000);
+  // Initialisation du BME280
+  Serial.print(F("Initialisation du BME280, à l'adresse [0x"));
+  Serial.print(adresseI2CduBME280, HEX);
+  Serial.println(F("]"));
+  
+  if(!bme.begin(adresseI2CduBME280)) {
+    Serial.println(F("--> ÉCHEC…"));
+  } else {
+    Serial.println(F("--> RÉUSSIE !"));
   }
-
-  switch(bme.chipModel())
-  {
-     case BME280::ChipModel_BME280:
-       Serial.println("Found BME280 sensor! Success.");
-       break;
-     case BME280::ChipModel_BMP280:
-       Serial.println("Found BMP280 sensor! No Humidity available.");
-       break;
-     default:
-       Serial.println("Found UNKNOWN sensor! Error!");
-  }
+  Serial.println();
+  
 }
 
-//////////////////////////////////////////////////////////////////
-void loop()
-{
-   printBME280Data(&Serial);
-   delay(500);
-}
 
-//////////////////////////////////////////////////////////////////
-void printBME280Data
-(
-   Stream* client
-)
-{
-   float temp(NAN), hum(NAN), pres(NAN);
+// ======================================
+// Boucle principale (boucle perpétuelle)
+// ======================================
+void loop() {
 
-   BME280::TempUnit tempUnit(BME280::TempUnit_Celsius);
-   BME280::PresUnit presUnit(BME280::PresUnit_Pa);
+  // Affichage de la TEMPÉRATURE
+  Serial.print(F("Température = "));
+  Serial.print(bme.readTemperature());
+  Serial.println(F(" °C"));
 
-   bme.read(pres, temp, hum, tempUnit, presUnit);
+  // Affichage du TAUX D'HUMIDITÉ
+  Serial.print(F("Humidité = "));
+  Serial.print(bme.readHumidity());
+  Serial.println(F(" %"));
+  
+  // Affichage de la PRESSION ATMOSPHÉRIQUE
+  Serial.print(F("Pression atmosphérique = "));
+  Serial.print(bme.readPressure() / 100.0F);
+  Serial.println(F(" hPa"));
 
-   client->print("Temp: ");
-   client->print(temp);
-   client->print("°"+ String(tempUnit == BME280::TempUnit_Celsius ? 'C' :'F'));
-   client->print("\t\tHumidity: ");
-   client->print(hum);
-   client->print("% RH");
-   client->print("\t\tPressure: ");
-   client->print(pres);
-   client->println("Pa");
+  // Affichage de l'estimation d'ALTITUDE
+  Serial.print(F("Altitude estimée = "));
+  Serial.print(bme.readAltitude(pressionAuNiveauDeLaMerEnHpa));
+  Serial.println(F(" m"));
 
-   delay(1000);
+
+  // ... et on répète ce cycle à l'infini !
+  delay(delaiRafraichissementAffichage);                // Avec x secondes d'attente, avant chaque rebouclage
+  Serial.println();                                     // … et un saut de ligne pour faire joli ;)
+
 }
