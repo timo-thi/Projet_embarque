@@ -18,6 +18,5 @@ void loop()
 
 void LightSensor(){
   int lux = analogRead(A0); //
-  return lux 
+  return lux
 }
-
