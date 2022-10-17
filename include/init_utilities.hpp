@@ -3,6 +3,10 @@
 #ifndef INIT_UTILITIES_FUNCTIONS
 #define INIT_UTILITIES_FUNCTIONS
 
+extern ChainableLED led;
+extern const int green_button;
+extern const int red_button;
+
 // Serial monitor
 void start_serial();
 void stop_serial();
