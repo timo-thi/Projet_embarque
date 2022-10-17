@@ -1,6 +1,7 @@
-#ifndef MODE_SWITCH
-#define MODE_SWITCH
+#include "mode_switch.hpp"
 
 
 
-#endif
+void change_mode(int button){
+    
+}
