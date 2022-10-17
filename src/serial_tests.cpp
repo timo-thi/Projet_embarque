@@ -24,6 +24,7 @@ void serial_recup(){
         buff = Serial.read();
         command[buff_count] = buff;
         buff_count++;
+        delay(100);
     }
     Serial.print("Found command : ");Serial.println(command);
 }
