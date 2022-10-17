@@ -35,54 +35,79 @@ void present()
 
     //Montre à l'utilisateur les options disponibles
     Serial.println("1 = LOG_INTERVALL = ");
+    //Définit LOG_INTERVALL sur 1
     Serial.print(LOG_INTERVALL);
+    //Donne la valeur actuelle ou par défaut de LOG_INTERVALL
     Serial.println("2 = FILE_MAX_SIZE = ");
+    //Définit FILE_MAX_SIZE sur 2
     Serial.print(FILE_MAX_SIZE);
+    //Donne la valeur actuelle ou par défaut de FILE_MAX_SIZE
     Serial.println("3 = RESET = ");
+    //Définit RESET sur 3
     Serial.print(RESET); 
+    //Donne la valeur actuelle ou par défaut de RESET
     Serial.println("4 = VERSION = ");
-    Serial.print(VERSION);  
+    //Définit VERSION sur 4
+    Serial.print(VERSION);
+    //Donne la valeur actuelle ou par défaut de VERSION
     Serial.println("5 = TIMEOUT = ");
-    Serial.print(TIMEOUT); 
+    //Définit TIMEOUT sur 5
+    Serial.print(TIMEOUT);
+    //Donne la valeur actuelle ou par défaut de TIMEOUT
 
     int B = 0;
     if (Serial.available() > 0) //Permet de voir ce qui sera écrit
     {
-        B = Serial.read();  //pose à C la valeur écrite
+        B = Serial.read();  //pose à B la valeur écrite
         if(B == 1)
+        //Si la valeur entrée est 1 alors on modifie LOG_INTERVALL
         {
             Serial.println("Entrez une nouvelle valeur de LOG_INTERVALL ");
             Serial.read();
+            //Laisse entrer la nouvelle donnée
             LOG_INTERVALL = Serial.read();
+            //Donne la nouvelle valeur
         }
         if(B == 2)
+        //Si la valeur entrée est 1 alors on modifie FILE_MAX_SIZE
         {
             Serial.println("Entrez une nouvelle valeur de FILE_MAX_SIZE ");
             Serial.read();
+            //Laisse entrer la nouvelle donnée
             FILE_MAX_SIZE = Serial.read();
+            //Donne la nouvelle valeur
         }
         if(B == 3)
+        //Si la valeur entrée est 1 alors on modifie RESET
         {
             Serial.println("Entrez une nouvelle valeur de RESET ");
             Serial.read();
+            //Laisse entrer la nouvelle donnée
             RESET = Serial.read();
+            //Donne la nouvelle valeur
         }
         if(B == 4)
+        //Si la valeur entrée est 1 alors on modifie VERSION
         {
             Serial.println("Entrez une nouvelle valeur de VERSION ");
             Serial.read();
+            //Laisse entrer la nouvelle donnée
             VERSION = Serial.read();
+            //Donne la nouvelle valeur
         }
         if(B == 5)
+        //Si la valeur entrée est 1 alors on modifie TIMEOUT
         {
             Serial.println("Entrez une nouvelle valeur de TIMEOUT (en ms) ");
             Serial.read();
+            //Laisse entrer la nouvelle donnée
             TIMEOUT = Serial.read();
+            //Donne la nouvelle valeur
         }
     }
 }
 
-void test(char A)
+/*void test(char A)
 {
     Serial.println("entre la valeur de A");
     if (Serial.available() > 0)
@@ -91,3 +116,4 @@ void test(char A)
     }
     Serial.print(A);
 }
+*/
