@@ -35,6 +35,7 @@ void init_rgb_led(){
   led.setColorRGB(0, 0, 0, 255);
   delay(100);
   led.setColorRGB(0, 0, 0, 0);
+  ledState = false;
 }
 
 void allumer(){
