@@ -1,14 +1,6 @@
 #include "init_utilities.hpp"
 
-struct Collect_params {
-  int interval;
-  int last_collect_time;
-  int current_time;
-  bool eco_alternate_gps;
-  int mode;
-  int previous_mode;
-
-  } collect_params;
+Collect_params collect_params;
 
 void setup() {
   // put your setup code here, to run once:

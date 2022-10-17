@@ -3,8 +3,15 @@
 #ifndef INIT_UTILITIES_FUNCTIONS
 #define INIT_UTILITIES_FUNCTIONS
 
-// extern from main
-extern Collect_params collect_params;
+struct Collect_params {
+  int interval;
+  int last_collect_time;
+  int current_time;
+  bool eco_alternate_gps;
+  int mode;
+  int previous_mode;
+
+  };
 
 // extern from init_utilities
 extern ChainableLED led;
