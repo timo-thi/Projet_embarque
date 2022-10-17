@@ -7,7 +7,7 @@ unsigned int button_timer = 5000;
 unsigned int timer = 5000;
 
 bool ledState = false;
-ChainableLED led(8, 7, 1);
+ChainableLED led(7, 8, 1);
 
 bool red_bascule = false;
 bool green_bascule = false;
@@ -25,6 +25,17 @@ void stop_serial(){
 }
 
 // RGB Led
+
+void init_rgb_led(){
+  led.init();
+  led.setColorRGB(0, 255, 0, 0);
+  delay(100);
+  led.setColorRGB(0, 0, 255, 0);
+  delay(100);
+  led.setColorRGB(0, 0, 0, 255);
+  delay(100);
+  led.setColorRGB(0, 0, 0, 0);
+}
 
 void allumer(){
   led.setColorRGB(0, 255, 255, 255);
@@ -57,8 +68,8 @@ void red_button_interrupt(){
 // Buttons
 
 void init_buttons(){
-    pinMode(red_button, INPUT);
-    pinMode(green_button, INPUT);
+    pinMode(red_button, INPUT_PULLUP);
+    pinMode(green_button, INPUT_PULLUP);
 }
 
 void init_button_interrupts(){
@@ -72,7 +83,7 @@ void init_button_interrupts(){
 ISR(TIMER1_COMPA_vect){
   if (green_bascule){
     timer -= 1; // Désincrémenter le timer si le bouton est pressé
-    Serial.println("Timer -1");
+    // Serial.println("Timer -1");
   }
   if (timer == 0) {
     if (ledState){

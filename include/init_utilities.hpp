@@ -11,6 +11,10 @@ void stop_serial();
 void init_buttons();
 void init_button_interrupts();
 
+// RGB LED
+
+void init_rgb_led();
+
 // Timers
 ISR(TIMER1_COMPA_vect);
 void initialisation_interruption_tim(long uSecs);
