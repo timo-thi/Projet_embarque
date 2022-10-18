@@ -9,7 +9,6 @@ void setup() {
   init_rgb_led();
   init_buttons();
   check_config();
-  present();
   init_button_interrupts();
   initialisation_interruption_tim(1000);
 }

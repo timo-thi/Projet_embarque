@@ -1,4 +1,5 @@
 #include <init_utilities.hpp>
+#include <ConfigMod.hpp>
 
 void check_config()
 {
@@ -7,6 +8,10 @@ void check_config()
     collect_params.mode = 3;
     initialisation_interruption_tim(10000); //Définit le timer 1 à la valeur indiquée
     timer = configTimeout; //Initialiser le timer
+    while (timer > 0)
+    {
+        present();
+    }
 }
 
 void present()
