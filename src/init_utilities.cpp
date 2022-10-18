@@ -1,8 +1,8 @@
 #include "init_utilities.hpp"
 
 // Global variables
-const int green_button = 2; // Green button pin on D2 shield interface
-const int red_button = 3; // Red button pin on D2 shield interface
+const int green_button = 4; // Green button pin on D4 shield interface
+const int red_button = 5; // Red button pin on D4 shield interface
 unsigned int button_timer = 5000; // Time to wait to consider a button press in ms
 unsigned int configTimeout = 50; // Time to wait before config inactivity timeout
 int timer = 5000; // Time counter in ms, will be decreased if a button is pressed, or reset at button_timer if new button pressed.
@@ -81,22 +81,25 @@ void red_button_interrupt(){
 
 // Buttons
 
+ISR(PCINT2_vect){
+	green_button_interrupt();
+	red_button_interrupt();
+}
+
 void init_buttons(){
 	/*
 	Initialize the two buttons.
-	They will be used for mode switching.
+	They will be used for mode switching using PCINT interruptions.
 	*/
 	pinMode(red_button, INPUT_PULLUP);
 	pinMode(green_button, INPUT_PULLUP);
+
+	noInterrupts();
+	PCICR |= B00000100; // Enable PCMK2 (Group 2 : PCINT16 to PCINT23 ~= PIN7 to PIN0)
+	PCMSK2 |= B00110000; // D4 and D5 will trigger
+	interrupts();
 }
 
-void init_button_interrupts(){
-	/*
-	We want to detect each button change for both red and green buttons.
-	*/
-	attachInterrupt(digitalPinToInterrupt(red_button), red_button_interrupt, CHANGE);
-	attachInterrupt(digitalPinToInterrupt(green_button), green_button_interrupt, CHANGE);
-}
 
 // Timers
 
