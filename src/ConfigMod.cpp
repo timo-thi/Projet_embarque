@@ -23,12 +23,12 @@ bool wait_for_entry(String *command, int *value){
     {
         return true;
     }
-    *command = Serial.readString();
-    int pos = command->indexOf("=");
-    Serial.print("pos : ");Serial.println(pos);
-    if (pos != -1){
-        *value = command->substring(pos+1).toInt();
-        *command = command->substring(0, pos);
+    *command = Serial.readString(); // Read string and store it directly into command
+    int pos = command->indexOf("="); // Check if "=" chracter occurs in command
+    // Serial.print("pos : ");Serial.println(pos); // DEBUG
+    if (pos != -1){ // If "=" found in command
+        *value = command->substring(pos+1).toInt(); // Isolate value and convert into integer or long.
+        *command = command->substring(0, pos); // Isolate command
     }
     else {
         command->trim(); // Remove every parasite end chracters.
