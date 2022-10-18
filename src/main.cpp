@@ -9,6 +9,7 @@ void setup() {
   init_rgb_led();
   init_buttons();
   check_config();
+  led.setColorRGB(0, 0, 255, 0);
   init_button_interrupts();
   initialisation_interruption_tim(1000);
 }
