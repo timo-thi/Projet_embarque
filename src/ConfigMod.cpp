@@ -57,6 +57,20 @@ void present()
     Serial.available();
     Serial.read();
 
+
+    String command;
+    int value;
+    Serial.print("WWW_User:~$ ");
+    while (Serial.available() <= 0) {};
+    command = Serial.readStringUntil('=');
+    Serial.read();
+    if (Serial.available() > 0)
+    value = Serial.parseInt();
+    while (Serial.available() > 0) Serial.read();
+    Serial.print("Found command : ");Serial.print(command);Serial.print(" | Found value : ");Serial.println(value);
+    Serial.print(command);Serial.print("=");Serial.println(value);
+
+
     int B = 0;
     if (Serial.available() > 0) //Permet de voir ce qui sera écrit
     {
