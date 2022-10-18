@@ -3,8 +3,10 @@
 void check_config()
 {
     if (! digitalRead(red_button)) return; // Si jamais le bouton rouge n'est pas pressé
-
     led.setColorRGB(0, 55, 55, 0); // Set led color (0,R,G,B)
+    collect_params.mode = 3;
+    initialisation_interruption_tim(10000); //Définit le timer 1 à la valeur indiquée
+    timer = configTimeout; //Initialiser le timer
 }
 
 void present()
@@ -60,7 +62,11 @@ void present()
     String command;
     int value;
     Serial.print("WWW_User:~$ ");
-    while (Serial.available() <= 0) {};
+    while ((Serial.available() <= 0) && (timer >= 0)) {}
+    if (timer <= 0) 
+    {
+        return;
+    }
     command = Serial.readStringUntil('=');
     Serial.read();
     if (Serial.available() > 0)
@@ -120,3 +126,4 @@ void present()
         }
     }
 }
+
