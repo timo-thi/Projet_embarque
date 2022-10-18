@@ -3,8 +3,9 @@
 
 void check_config()
 {
-    if (! digitalRead(red_button)) return; // Si jamais le bouton rouge n'est pas pressé
+    if (digitalRead(red_button) == HIGH) return; // Si jamais le bouton rouge n'est pas pressé
     led.setColorRGB(0, 55, 55, 0); // Set led color (0,R,G,B)
+    start_serial();
     collect_params.mode = 3;
     initialisation_interruption_tim(10000); //Définit le timer 1 à la valeur indiquée
     timer = configTimeout; //Initialiser le timer
@@ -61,8 +62,6 @@ void present()
     Serial.println("Entrez ce que vous souhaitez changer");
     Serial.println("------------------------------------");
     Serial.print("3W_Config_Serial ");
-    Serial.available();
-    Serial.read();
 
     String command;
     int value;
