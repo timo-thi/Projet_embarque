@@ -9,11 +9,22 @@ void check_config()
     collect_params.mode = 3;
     initialisation_interruption_tim(10000); //Définit le timer 1 à la valeur indiquée
     timer = configTimeout; //Initialiser le timer
+    Serial.println(timer);
     while (timer > 0)
     {
         present();
     }
 }
+
+uint64_t constexpr mix(char m, uint64_t s)
+ {
+  return ((s<<7) + ~(s>>3)) + ~m;
+ }
+ 
+uint64_t constexpr hash(int m)
+ {
+  return (*m) ? mix(*m,hash(m+1)) : 0;
+ }
 
 void present()
 {
@@ -34,6 +45,7 @@ void present()
     int PRESSURE_MIN = 850;
     int PRESSURE_MAX = 1080;
 
+<<<<<<< Updated upstream
     //gestion d'une réponse pour la configuration
     bool C = 0;
     if (Serial.available() > 0) //Permet de voir ce qui sera écrit
@@ -46,6 +58,8 @@ void present()
         else Serial.println("Erreur "); //arrêt
     }
 
+=======
+>>>>>>> Stashed changes
     //Commence à modéliser une interraction avec l'utilisateur
     Serial.println("Entrez ce que vous souhaitez changer");
     Serial.println("------------------------------------");
@@ -62,11 +76,15 @@ void present()
     Serial.read();
     value = Serial.parseInt();
     while (Serial.available() > 0) Serial.read();
+<<<<<<< Updated upstream
     Serial.print("Found command : ");
+=======
+>>>>>>> Stashed changes
     Serial.print(command);
     Serial.print("=");
     Serial.println(value);
 
+<<<<<<< Updated upstream
     if(command == String("LOG_INTERVALL"))
     //Si la valeur entrée est 1 alors on modifie LOG_INTERVALL
     {
@@ -144,5 +162,96 @@ void present()
     {
         TIMEOUT = value;
         Serial.println(TIMEOUT);
+=======
+    switch (hash(value))
+    {
+    case hash("LOG_INTERVALL"):
+        Serial.println("Found LOG_INTERVALL");
+        LOG_INTERVALL = value;
+        break;
+    
+    case hash("FILE_MAX_SIZE"):
+        Serial.println("Found FILE_MAX_SIZE");
+        FILE_MAX_SIZE = command;
+        break;
+
+    case hash("RESET"):
+        Serial.println("Found RESET");
+        RESET = command;
+        break;
+    
+    case hash("VERSION"):
+        Serial.println("Found VERSION");
+        VERSION = command;
+        break;
+
+    case hash("TIMEOUT"):
+        Serial.println("Found TIMEOUT");
+        TIMEOUT = command;
+        break;
+    
+    case hash("LUMIN"):
+        Serial.println("Found LUMIN");
+        LUMIN = command;
+        break;
+
+    case hash("LUMIN_LOW"):
+        Serial.println("Found LUMIN_LOW");
+        LUMIN_LOW = command;
+        break;
+    
+    case hash("LUMIN_HIGH"):
+        Serial.println("Found LUMIN_HIGH");
+        LUMIN_HIGH = command;
+        break;
+
+    case hash("TEMP_AIR"):
+        Serial.println("Found TEMP_AIR");
+        TEMP_AIR = command;
+        break;
+    
+    case hash("MIN_TEMP_AIR"):
+        Serial.println("Found MIN_TEMP_AIR");
+        MIN_TEMP_AIR = command;
+        break;
+
+    case hash("MAX_TEMP_AIR"):
+        Serial.println("Found MAX_TEMP_AIR");
+        MAX_TEMP_AIR = command;
+        break;
+    
+    case hash("HYGR"):
+        Serial.println("Found HYGR");
+        HYGR = command;
+        break;
+
+    case hash("HYGR_MINT"):
+        Serial.println("Found HYGR_MINT");
+        HYGR_MINT = command;
+        break;
+    
+    case hash("HYGR_MAXT"):
+        Serial.println("Found HYGR_MAXT");
+        HYGR_MAXT = command;
+        break;
+
+    case hash("PRESSURE"):
+        Serial.println("Found PRESSURE");
+        PRESSURE = command;
+        break;
+    
+    case hash("PRESSURE_MIN"):
+        Serial.println("Found PRESSURE_MIN");
+        PRESSURE_MIN = command;
+        break;
+    
+    case hash("PRESSURE_MAX"):
+        Serial.println("Found PRESSURE_MAX");
+        PRESSURE_MAX = command;
+        break;
+
+    default:
+        break;
+>>>>>>> Stashed changes
     }
 }
