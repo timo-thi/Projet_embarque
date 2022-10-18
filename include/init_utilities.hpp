@@ -3,6 +3,7 @@
 #ifndef INIT_UTILITIES_FUNCTIONS
 #define INIT_UTILITIES_FUNCTIONS
 
+
 struct Collect_params {
   int interval;
   int last_collect_time;
@@ -24,6 +25,7 @@ extern const int green_button;
 
 // Extern from mode_switch
 extern void change_mode(int button);
+
 
 // Serial monitor
 void start_serial();
