@@ -12,6 +12,7 @@ void setup() {
   initialisation_interruption_tim(1000);
 }
 
-void loop() {
+void loop()
+{
   // put your main code here, to run repeatedly:
 }
