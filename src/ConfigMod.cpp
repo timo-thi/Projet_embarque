@@ -1,5 +1,6 @@
 #include <init_utilities.hpp>
 #include <ConfigMod.hpp>
+#include "eeprom_utilities.hpp"
 
 void check_config()
 {
