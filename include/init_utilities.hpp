@@ -5,6 +5,9 @@
 
 extern ChainableLED led;
 
+extern const int green_button;
+extern const int red_button;
+
 // Serial monitor
 void start_serial();
 void stop_serial();
