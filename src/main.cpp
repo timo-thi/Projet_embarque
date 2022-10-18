@@ -1,8 +1,10 @@
 #include "init_utilities.hpp"
 
+Collect_params collect_params;
+
 void setup() {
   // put your setup code here, to run once:
-  start_serial();
+  // start_serial();
   init_rgb_led();
   init_buttons();
   init_button_interrupts();
