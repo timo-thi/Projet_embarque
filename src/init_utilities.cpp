@@ -4,7 +4,8 @@
 const int green_button = 4; // Green button pin on D4 shield interface
 const int red_button = 5; // Red button pin on D4 shield interface
 unsigned int button_timer = 5000; // Time to wait to consider a button press in ms
-unsigned int timer = 5000; // Time counter in ms, will be decreased if a button is pressed, or reset at button_timer if new button pressed.
+unsigned int configTimeout = 50; // Time to wait before config inactivity timeout
+int timer = 5000; // Time counter in ms, will be decreased if a button is pressed, or reset at button_timer if new button pressed.
 
 bool ledState = false; // The ledState shows if the led is on or off however the color
 ChainableLED led(7, 8, 1); // This object is the RGB LED handler
@@ -104,9 +105,9 @@ void init_buttons(){
 
 // Timer interruption management
 ISR(TIMER1_COMPA_vect){
-	if (green_bascule || red_bascule){ // If button pressed
+	if (green_bascule || red_bascule || collect_params.mode == 3){ // If button pressed
 		timer -= 1;                   // Decrease timer
-    	// Serial.println("Timer -1");  // DEBUG
+    	// Serial.println(timer);  // DEBUG
 	}
 	if (timer == 0) { // If the timer reaches 0, the button press time is over and the code can run further according to the normal button function
     	if (green_bascule){
