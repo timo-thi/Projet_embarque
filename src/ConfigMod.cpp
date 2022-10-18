@@ -17,6 +17,7 @@ void check_config()
         wait_for_param();
     }
     stop_serial();
+    collect_params.mode = 0;
 }
 
 bool wait_for_entry(String *command, int *value){
@@ -78,6 +79,7 @@ void wait_for_param()
     int value;
     if (wait_for_entry(&command, &value)) return; // If true, return to exit config mode
 
+    timer = configTimeout;
     Serial.print("Found command : "); // DEBUG
     Serial.print(command);           // or
     Serial.print("=");              // user interface
