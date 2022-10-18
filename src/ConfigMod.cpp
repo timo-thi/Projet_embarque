@@ -17,6 +17,18 @@ void check_config()
     }
 }
 
+void wait_for_entry(String *command, int *value){
+    while ((Serial.available() <= 0) && (timer >= 0)) {}
+    if (timer <= 0) 
+    {
+        return;
+    }
+    *command = Serial.readStringUntil('=');
+    Serial.read();
+    *value = Serial.parseInt();
+    while (Serial.available() > 0) Serial.read();
+}
+
 void present()
 {
     //Pose les paramètres par défaut
@@ -51,19 +63,12 @@ void present()
     //Commence à modéliser une interraction avec l'utilisateur
     Serial.println("Entrez ce que vous souhaitez changer");
     Serial.println("------------------------------------");
+    Serial.print("WWW_User:~$ ");
 
     String command;
     int value;
-    Serial.print("WWW_User:~$ ");
-    while ((Serial.available() <= 0) && (timer >= 0)) {}
-    if (timer <= 0) 
-    {
-        return;
-    }
-    command = Serial.readStringUntil('=');
-    Serial.read();
-    value = Serial.parseInt();
-    while (Serial.available() > 0) Serial.read();
+    wait_for_entry(&command, &value);
+    
     Serial.print("Found command : ");
     Serial.print(command);
     Serial.print("=");
@@ -75,37 +80,37 @@ void present()
         LOG_INTERVALL = value;
         Serial.println(LOG_INTERVALL);
     }
-    if(command == String("FILE_MAX_SIZE"))
+    else if(command == String("FILE_MAX_SIZE"))
     //Si la valeur entrée est 1 alors on modifie FILE_MAX_SIZE
     {
         FILE_MAX_SIZE = value;
         Serial.println(FILE_MAX_SIZE);
     }
-    if(command == String("TIMEOUT"))
+    else if(command == String("TIMEOUT"))
     //Si la valeur entrée est 1 alors on modifie TIMEOUT
     {
         TIMEOUT = value;
         Serial.println(TIMEOUT);
     }
-    if(command == String("LUMIN"))
+    else if(command == String("LUMIN"))
     //Si la valeur entrée est 1 alors on modifie TIMEOUT
     {
         LUMIN = value;
         Serial.println(LUMIN);
     }
-        if(command == String("LUMIN_LOW"))
+    else if(command == String("LUMIN_LOW"))
     //Si la valeur entrée est 1 alors on modifie TIMEOUT
     {
         LUMIN_LOW = value;
         Serial.println(LUMIN_LOW);
     }
-        if(command == String("LUMIN_HIGH"))
+    else if(command == String("LUMIN_HIGH"))
     //Si la valeur entrée est 1 alors on modifie TIMEOUT
     {
         LUMIN_HIGH = value;
         Serial.println(LUMIN_HIGH);
     }
-        if(command == String("TEMP_AIR"))
+    else if(command == String("TEMP_AIR"))
     //Si la valeur entrée est 1 alors on modifie TIMEOUT
     {
         TEMP_AIR = value;
@@ -117,34 +122,46 @@ void present()
         MIN_TEMP_AIR = value;
         Serial.println(MIN_TEMP_AIR);
     }
-        if(command == String("MAX_TEMP_AIR"))
+    else if(command == String("MAX_TEMP_AIR"))
     //Si la valeur entrée est 1 alors on modifie TIMEOUT
     {
         MAX_TEMP_AIR = value;
         Serial.println(MAX_TEMP_AIR);
     }
-        if(command == String("HYGR"))
+    else if(command == String("HYGR"))
     //Si la valeur entrée est 1 alors on modifie TIMEOUT
     {
         HYGR = value;
         Serial.println(HYGR);
     }
-    if(command == String("HYGR_MINT"))
+    else if(command == String("HYGR_MINT"))
     //Si la valeur entrée est 1 alors on modifie TIMEOUT
     {
         HYGR_MINT = value;
         Serial.println(HYGR_MINT);
     }
-    if(command == String("HYGR_MAXT"))
+    else if(command == String("HYGR_MAXT"))
     //Si la valeur entrée est 1 alors on modifie TIMEOUT
     {
         HYGR_MAXT = value;
         Serial.println(HYGR_MAXT);
     }
-    if(command == String("TIMEOUT"))
+    else if(command == String("PRESSURE"))
     //Si la valeur entrée est 1 alors on modifie TIMEOUT
     {
-        TIMEOUT = value;
-        Serial.println(TIMEOUT);
+        PRESSURE = value;
+        Serial.println(PRESSURE);
+    }
+    else if(command == String("PRESSURE_MAX"))
+    //Si la valeur entrée est 1 alors on modifie TIMEOUT
+    {
+        PRESSURE_MAX = value;
+        Serial.println(PRESSURE_MAX);
+    }
+    else if(command == String("PRESSURE_MIN"))
+    //Si la valeur entrée est 1 alors on modifie TIMEOUT
+    {
+        PRESSURE_MIN = value;
+        Serial.println(PRESSURE_MIN);
     }
 }
