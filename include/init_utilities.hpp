@@ -33,7 +33,6 @@ void stop_serial();
 
 // Buttons
 void init_buttons();
-void init_button_interrupts();
 
 // RGB LED
 

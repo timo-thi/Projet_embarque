@@ -2,6 +2,8 @@
 #include <ConfigMod.hpp>
 #include "eeprom_utilities.hpp"
 
+void wait_for_param();
+
 void check_config()
 {
     if (digitalRead(red_button) == HIGH) return; // Si jamais le bouton rouge n'est pas pressé
