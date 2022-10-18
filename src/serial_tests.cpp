@@ -15,16 +15,15 @@ void test_init(){
 }
 
 void serial_recup(){
-    char buff = -1;
-    char command[50];
-    int buff_count = 0;
+    String command;
+    int value;
     Serial.print("WWW_User:~$ ");
     while (Serial.available() <= 0) {};
-    while (Serial.available() > 0) {
-        buff = Serial.read();
-        command[buff_count] = buff;
-        buff_count++;
-        delay(100);
-    }
-    Serial.print("Found command : ");Serial.println(command);
+    command = Serial.readStringUntil('=');
+    // Serial.read();
+    // if (Serial.available() > 0)
+    value = Serial.parseInt();
+    while (Serial.available() > 0) Serial.read();
+    // Serial.print("Found command : ");Serial.print(command);Serial.print(" | Found value : ");Serial.println(value);
+    Serial.print(command);Serial.print("=");Serial.println(value);
 }
