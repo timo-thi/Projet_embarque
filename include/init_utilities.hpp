@@ -13,11 +13,17 @@ struct Collect_params {
 
   };
 
-// extern from init_utilities
+// Extern from main
+extern Collect_params collect_params;
+
+// Extern from init_utilities
 extern ChainableLED led;
 
 extern const int red_button;
 extern const int green_button;
+
+// Extern from mode_switch
+extern void change_mode(int button);
 
 // Serial monitor
 void start_serial();
