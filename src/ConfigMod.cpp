@@ -1,6 +1,5 @@
 #include <init_utilities.hpp>
 #include <ConfigMod.hpp>
-#include "eeprom_utilities.hpp"
 
 void check_config()
 {
@@ -10,6 +9,7 @@ void check_config()
     collect_params.mode = 3;
     initialisation_interruption_tim(10000); //Définit le timer 1 à la valeur indiquée
     timer = configTimeout; //Initialiser le timer
+    Serial.println(timer);
     while (timer > 0)
     {
         present();
@@ -21,9 +21,19 @@ void present()
     //Pose les paramètres par défaut
     int LOG_INTERVALL = 10;
     int FILE_MAX_SIZE = 4096;
-    bool RESET = 0;
-    bool VERSION = 0;
     int TIMEOUT = 3000;
+    bool LUMIN = 1;
+    int LUMIN_LOW = 255;
+    int LUMIN_HIGH = 768;
+    bool TEMP_AIR = 1;
+    int MIN_TEMP_AIR = -10;
+    int MAX_TEMP_AIR = 60;
+    bool HYGR = 1;
+    int HYGR_MINT = 0;
+    int HYGR_MAXT = 50;
+    bool PRESSURE = 1;
+    int PRESSURE_MIN = 850;
+    int PRESSURE_MAX = 1080;
 
     //gestion d'une réponse pour la configuration
     bool C = 0;
@@ -37,32 +47,9 @@ void present()
         else Serial.println("Erreur "); //arrêt
     }
 
-    //Montre à l'utilisateur les options disponibles
-    Serial.print("1 = LOG_INTERVALL = ");
-    //Définit LOG_INTERVALL sur 1
-    Serial.println(LOG_INTERVALL);
-    //Donne la valeur actuelle ou par défaut de LOG_INTERVALL
-    Serial.print("2 = FILE_MAX_SIZE = ");
-    //Définit FILE_MAX_SIZE sur 2
-    Serial.println(FILE_MAX_SIZE);
-    //Donne la valeur actuelle ou par défaut de FILE_MAX_SIZE
-    Serial.print("3 = RESET = ");
-    //Définit RESET sur 3
-    Serial.println(RESET); 
-    //Donne la valeur actuelle ou par défaut de RESET
-    Serial.print("4 = VERSION = ");
-    //Définit VERSION sur 4
-    Serial.println(VERSION);
-    //Donne la valeur actuelle ou par défaut de VERSION
-    Serial.print("5 = TIMEOUT = ");
-    //Définit TIMEOUT sur 5
-    Serial.println(TIMEOUT);
-    //Donne la valeur actuelle ou par défaut de TIMEOUT
-
     //Commence à modéliser une interraction avec l'utilisateur
     Serial.println("Entrez ce que vous souhaitez changer");
     Serial.println("------------------------------------");
-    Serial.print("3W_Config_Serial ");
 
     String command;
     int value;
@@ -74,61 +61,89 @@ void present()
     }
     command = Serial.readStringUntil('=');
     Serial.read();
-    if (Serial.available() > 0)
     value = Serial.parseInt();
     while (Serial.available() > 0) Serial.read();
-    Serial.print("Found command : ");Serial.print(command);Serial.print(" | Found value : ");Serial.println(value);
-    Serial.print(command);Serial.print("=");Serial.println(value);
+    Serial.print("Found command : ");
+    Serial.print(command);
+    Serial.print("=");
+    Serial.println(value);
 
-    int B = 0;
-    if (Serial.available() > 0) //Permet de voir ce qui sera écrit
+    if(command == String("LOG_INTERVALL"))
+    //Si la valeur entrée est 1 alors on modifie LOG_INTERVALL
     {
-        B = Serial.read();  //pose à B la valeur écrite
-        if(B == 1)
-        //Si la valeur entrée est 1 alors on modifie LOG_INTERVALL
-        {
-            Serial.println("Entrez une nouvelle valeur de LOG_INTERVALL ");
-            Serial.read();
-            //Laisse entrer la nouvelle donnée
-            LOG_INTERVALL = Serial.read();
-            //Donne la nouvelle valeur
-        }
-        if(B == 2)
-        //Si la valeur entrée est 1 alors on modifie FILE_MAX_SIZE
-        {
-            Serial.println("Entrez une nouvelle valeur de FILE_MAX_SIZE ");
-            Serial.read();
-            //Laisse entrer la nouvelle donnée
-            FILE_MAX_SIZE = Serial.read();
-            //Donne la nouvelle valeur
-        }
-        if(B == 3)
-        //Si la valeur entrée est 1 alors on modifie RESET
-        {
-            Serial.println("Entrez une nouvelle valeur de RESET ");
-            Serial.read();
-            //Laisse entrer la nouvelle donnée
-            RESET = Serial.read();
-            //Donne la nouvelle valeur
-        }
-        if(B == 4)
-        //Si la valeur entrée est 1 alors on modifie VERSION
-        {
-            Serial.println("Entrez une nouvelle valeur de VERSION ");
-            Serial.read();
-            //Laisse entrer la nouvelle donnée
-            VERSION = Serial.read();
-            //Donne la nouvelle valeur
-        }
-        if(B == 5)
-        //Si la valeur entrée est 1 alors on modifie TIMEOUT
-        {
-            Serial.println("Entrez une nouvelle valeur de TIMEOUT (en ms) ");
-            Serial.read();
-            //Laisse entrer la nouvelle donnée
-            TIMEOUT = Serial.read();
-            //Donne la nouvelle valeur
-        }
+        LOG_INTERVALL = value;
+        Serial.println(LOG_INTERVALL);
+    }
+    if(command == String("FILE_MAX_SIZE"))
+    //Si la valeur entrée est 1 alors on modifie FILE_MAX_SIZE
+    {
+        FILE_MAX_SIZE = value;
+        Serial.println(FILE_MAX_SIZE);
+    }
+    if(command == String("TIMEOUT"))
+    //Si la valeur entrée est 1 alors on modifie TIMEOUT
+    {
+        TIMEOUT = value;
+        Serial.println(TIMEOUT);
+    }
+    if(command == String("LUMIN"))
+    //Si la valeur entrée est 1 alors on modifie TIMEOUT
+    {
+        LUMIN = value;
+        Serial.println(LUMIN);
+    }
+        if(command == String("LUMIN_LOW"))
+    //Si la valeur entrée est 1 alors on modifie TIMEOUT
+    {
+        LUMIN_LOW = value;
+        Serial.println(LUMIN_LOW);
+    }
+        if(command == String("LUMIN_HIGH"))
+    //Si la valeur entrée est 1 alors on modifie TIMEOUT
+    {
+        LUMIN_HIGH = value;
+        Serial.println(LUMIN_HIGH);
+    }
+        if(command == String("TEMP_AIR"))
+    //Si la valeur entrée est 1 alors on modifie TIMEOUT
+    {
+        TEMP_AIR = value;
+        Serial.println(TEMP_AIR);
+    }
+    if(command == String("MIN_TEMP_AIR"))
+    //Si la valeur entrée est 1 alors on modifie TIMEOUT
+    {
+        MIN_TEMP_AIR = value;
+        Serial.println(MIN_TEMP_AIR);
+    }
+        if(command == String("MAX_TEMP_AIR"))
+    //Si la valeur entrée est 1 alors on modifie TIMEOUT
+    {
+        MAX_TEMP_AIR = value;
+        Serial.println(MAX_TEMP_AIR);
+    }
+        if(command == String("HYGR"))
+    //Si la valeur entrée est 1 alors on modifie TIMEOUT
+    {
+        HYGR = value;
+        Serial.println(HYGR);
+    }
+    if(command == String("HYGR_MINT"))
+    //Si la valeur entrée est 1 alors on modifie TIMEOUT
+    {
+        HYGR_MINT = value;
+        Serial.println(HYGR_MINT);
+    }
+    if(command == String("HYGR_MAXT"))
+    //Si la valeur entrée est 1 alors on modifie TIMEOUT
+    {
+        HYGR_MAXT = value;
+        Serial.println(HYGR_MAXT);
+    }
+    if(command == String("TIMEOUT"))
+    //Si la valeur entrée est 1 alors on modifie TIMEOUT
+    {
+        TIMEOUT = value;
+        Serial.println(TIMEOUT);
     }
 }
-
