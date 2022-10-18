@@ -1,4 +1,5 @@
 #include "init_utilities.hpp"
+#include "ConfigMod.hpp"
 
 Collect_params collect_params;
 
@@ -7,10 +8,13 @@ void setup() {
   // start_serial();
   init_rgb_led();
   init_buttons();
+  check_config();
+  led.setColorRGB(0, 0, 255, 0);
   init_button_interrupts();
   initialisation_interruption_tim(1000);
 }
 
-void loop() {
+void loop()
+{
   // put your main code here, to run repeatedly:
 }
