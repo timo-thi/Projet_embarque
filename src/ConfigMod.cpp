@@ -2,7 +2,7 @@
 
 void check_config()
 {
-    //if (! digitalRead(red_button)) return; // Si jamais le bouton rouge n'est pas pressé
+    if (! digitalRead(red_button)) return; // Si jamais le bouton rouge n'est pas pressé
 
     led.setColorRGB(0, 55, 55, 0); // Set led color (0,R,G,B)
 }
@@ -15,11 +15,6 @@ void present()
     bool RESET = 0;
     bool VERSION = 0;
     int TIMEOUT = 3000;
-    
-    //Commence à modéliser une interraction avec l'utilisateur
-    Serial.println("Entrez ce que vous souhaitez changer");
-    Serial.println("------------------------------------");
-    Serial.print("3W_Config_Serial ");
     
     //gestion d'une réponse pour la configuration
     bool C = 0;
@@ -34,26 +29,33 @@ void present()
     }
 
     //Montre à l'utilisateur les options disponibles
-    Serial.println("1 = LOG_INTERVALL = ");
+    Serial.print("1 = LOG_INTERVALL = ");
     //Définit LOG_INTERVALL sur 1
-    Serial.print(LOG_INTERVALL);
+    Serial.println(LOG_INTERVALL);
     //Donne la valeur actuelle ou par défaut de LOG_INTERVALL
-    Serial.println("2 = FILE_MAX_SIZE = ");
+    Serial.print("2 = FILE_MAX_SIZE = ");
     //Définit FILE_MAX_SIZE sur 2
-    Serial.print(FILE_MAX_SIZE);
+    Serial.println(FILE_MAX_SIZE);
     //Donne la valeur actuelle ou par défaut de FILE_MAX_SIZE
-    Serial.println("3 = RESET = ");
+    Serial.print("3 = RESET = ");
     //Définit RESET sur 3
-    Serial.print(RESET); 
+    Serial.println(RESET); 
     //Donne la valeur actuelle ou par défaut de RESET
-    Serial.println("4 = VERSION = ");
+    Serial.print("4 = VERSION = ");
     //Définit VERSION sur 4
-    Serial.print(VERSION);
+    Serial.println(VERSION);
     //Donne la valeur actuelle ou par défaut de VERSION
-    Serial.println("5 = TIMEOUT = ");
+    Serial.print("5 = TIMEOUT = ");
     //Définit TIMEOUT sur 5
-    Serial.print(TIMEOUT);
+    Serial.println(TIMEOUT);
     //Donne la valeur actuelle ou par défaut de TIMEOUT
+
+    //Commence à modéliser une interraction avec l'utilisateur
+    Serial.println("Entrez ce que vous souhaitez changer");
+    Serial.println("------------------------------------");
+    Serial.print("3W_Config_Serial ");
+    Serial.available();
+    Serial.read();
 
     int B = 0;
     if (Serial.available() > 0) //Permet de voir ce qui sera écrit
@@ -106,14 +108,3 @@ void present()
         }
     }
 }
-
-/*void test(char A)
-{
-    Serial.println("entre la valeur de A");
-    if (Serial.available() > 0)
-    {
-        A = Serial.read();
-    }
-    Serial.print(A);
-}
-*/
