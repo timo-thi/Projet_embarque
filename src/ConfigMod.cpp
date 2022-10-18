@@ -15,7 +15,7 @@ void present()
     bool RESET = 0;
     bool VERSION = 0;
     int TIMEOUT = 3000;
-    
+
     //gestion d'une réponse pour la configuration
     bool C = 0;
     if (Serial.available() > 0) //Permet de voir ce qui sera écrit
@@ -121,4 +121,28 @@ void present()
             //Donne la nouvelle valeur
         }
     }
+}
+
+// Timer interruption management
+ISR(TIMER1_COMPA_vect)
+{
+    
+}
+
+void TIMER(long uSecs)
+{
+    noInterrupts(); // Disable interrupts during configuration of timer
+
+    TCCR1A = 0;
+    TCCR1B = 0;
+    TCNT1 = 0;
+
+    OCR1A = ((16e6/256L * uSecs) / (1e6) ) - 1;
+    // Serial.println(OCR1A); // DEBUG
+
+    TCCR1B |= (1 << WGM12);    // CTC mode
+    TCCR1B |= (1 << CS12);     // Choose 256 prescaler
+    TIMSK1 |= (1 << OCIE1A);   // Enable timer
+
+    interrupts(); // Ensable interrupts when configuration is complete
 }
