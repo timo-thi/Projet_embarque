@@ -1,72 +1,66 @@
-#include <Arduino.h>
-#include "init_utilities.hpp"
+#include <Wire.h>
+#include <RTClib.h>
 
-#include <Adafruit_BME280.h>                            // Inclusion de la librairie BME280 d'Adafruit
-
-// Constantes du programme
-#define adresseI2CduBME280                0x76            // Adresse I2C du BME280 (0x76, dans mon cas, ce qui est souvent la valeur par défaut)
-#define pressionAuNiveauDeLaMerEnHpa      1024.90         // https://fr.wikipedia.org/wiki/Pression_atmospherique (1013.25 hPa en moyenne, valeur "par défaut")
-#define delaiRafraichissementAffichage    1500            // Délai de rafraîchissement de l'affichage (en millisecondes)
-
-// Instanciation de la librairie BME280
-Adafruit_BME280 bme;
+RTC_DS1307 rtc;
 
 
-// ========================
-// Initialisation programme
-// ========================
-void setup() {
-  
-  // Initialisation du port série (pour l'envoi d'infos via le moniteur série de l'IDE Arduino)
+void setup () {
   Serial.begin(9600);
-  while(!Serial);
-  Serial.println("Programme de test du BME280");
-  Serial.println("===========================");
-  Serial.println();
 
-  // Initialisation du BME280
-  Serial.print(F("Initialisation du BME280, à l'adresse [0x"));
-  Serial.print(adresseI2CduBME280, HEX);
-  Serial.println(F("]"));
-  
-  if(!bme.begin(adresseI2CduBME280)) {
-    Serial.println(F("--> ÉCHEC…"));
-  } else {
-    Serial.println(F("--> RÉUSSIE !"));
+#ifndef ESP8266
+  while (!Serial); // wait for serial port to connect. Needed for native USB
+#endif
+
+  if (! rtc.begin()) {
+    Serial.println("Couldn't find RTC");
+    Serial.flush();
+    while (1) delay(10);
   }
-  Serial.println();
-  
+
+  if (! rtc.isrunning()) {
+    Serial.println("RTC is NOT running, let's set the time!");
+    // When time needs to be set on a new device, or after a power loss, the
+    // following line sets the RTC to the date & time this sketch was compiled
+    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+    // This line sets the RTC with an explicit date & time, for example to set
+    // January 21, 2014 at 3am you would call:
+    // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
+  }
+
+  // When time needs to be re-set on a previously configured device, the
+  // following line sets the RTC to the date & time this sketch was compiled
+  // rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+  // This line sets the RTC with an explicit date & time, for example to set
+  // January 21, 2014 at 3am you would call:
+  // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
 }
 
-
-// ======================================
-// Boucle principale (boucle perpétuelle)
-// ======================================
 void loop() {
 
-  // Affichage de la TEMPÉRATURE
-  Serial.print(F("Température = "));
-  Serial.print(bme.readTemperature());
-  Serial.println(F(" °C"));
+   DateTime now = rtc.now();
 
-  // Affichage du TAUX D'HUMIDITÉ
-  Serial.print(F("Humidité = "));
-  Serial.print(bme.readHumidity());
-  Serial.println(F(" %"));
-  
-  // Affichage de la PRESSION ATMOSPHÉRIQUE
-  Serial.print(F("Pression atmosphérique = "));
-  Serial.print(bme.readPressure() / 100.0F);
-  Serial.println(F(" hPa"));
+  //buffer can be defined using following combinations:
+  //hh - the hour with a leading zero (00 to 23)
+  //mm - the minute with a leading zero (00 to 59)
+  //ss - the whole second with a leading zero where applicable (00 to 59)
+  //YYYY - the year as four digit number
+  //YY - the year as two digit number (00-99)
+  //MM - the month as number with a leading zero (01-12)
+  //MMM - the abbreviated English month name ('Jan' to 'Dec')
+  //DD - the day as number with a leading zero (01 to 31)
+  //DDD - the abbreviated English day name ('Mon' to 'Sun')
 
-  // Affichage de l'estimation d'ALTITUDE
-  Serial.print(F("Altitude estimée = "));
-  Serial.print(bme.readAltitude(pressionAuNiveauDeLaMerEnHpa));
-  Serial.println(F(" m"));
+   char buf1[] = "hh:mm";
+   Serial.println(now.toString(buf1));
 
+   char buf2[] = "YYMMDD-hh:mm:ss";
+   Serial.println(now.toString(buf2));
 
-  // ... et on répète ce cycle à l'infini !
-  delay(delaiRafraichissementAffichage);                // Avec x secondes d'attente, avant chaque rebouclage
-  Serial.println();                                     // … et un saut de ligne pour faire joli ;)
+   char buf3[] = "Today is DDD, MMM DD YYYY";
+   Serial.println(now.toString(buf3));
 
+   char buf4[] = "MM-DD-YYYY";
+   Serial.println(now.toString(buf4));
+
+   delay(1000);
 }

@@ -1,61 +1,66 @@
 #include <Wire.h>
-#include "DS1307.h"
- 
-DS1307 clock;//define a object of DS1307 class
-void setup()
-{
-    Serial.begin(9600);
-    clock.begin();
-    clock.fillByYMD(2013,1,19);//Jan 19,2013
-    clock.fillByHMS(15,28,30);//15:28 30"
-    clock.fillDayOfWeek(SAT);//Saturday
-    clock.setTime();//write time to the RTC chip
+#include <RTClib.h>
+
+RTC_DS1307 rtc;
+
+
+void setup () {
+  Serial.begin(9600);
+
+#ifndef ESP8266
+  while (!Serial); // wait for serial port to connect. Needed for native USB
+#endif
+
+  if (! rtc.begin()) {
+    Serial.println("Couldn't find RTC");
+    Serial.flush();
+    while (1) delay(10);
+  }
+
+  if (! rtc.isrunning()) {
+    Serial.println("RTC is NOT running, let's set the time!");
+    // When time needs to be set on a new device, or after a power loss, the
+    // following line sets the RTC to the date & time this sketch was compiled
+    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+    // This line sets the RTC with an explicit date & time, for example to set
+    // January 21, 2014 at 3am you would call:
+    // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
+  }
+
+  // When time needs to be re-set on a previously configured device, the
+  // following line sets the RTC to the date & time this sketch was compiled
+  // rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+  // This line sets the RTC with an explicit date & time, for example to set
+  // January 21, 2014 at 3am you would call:
+  // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
 }
-void loop()
-{
-    printTime();
-}
-    /*Function: Display time on the serial monitor*/
-void printTime()
-{
-    clock.getTime();
-    Serial.print(clock.hour, DEC);
-    Serial.print(":");
-    Serial.print(clock.minute, DEC);
-    Serial.print(":");
-    Serial.print(clock.second, DEC);
-    Serial.print("  ");
-    Serial.print(clock.month, DEC);
-    Serial.print("/");
-    Serial.print(clock.dayOfMonth, DEC);
-    Serial.print("/");
-    Serial.print(clock.year+2000, DEC);
-    Serial.print(" ");
-    Serial.print(clock.dayOfMonth);
-    Serial.print("*");
-    switch (clock.dayOfWeek)// Friendly printout the weekday
-    {
-        case MON:
-        Serial.print("MON");
-        break;
-        case TUE:
-        Serial.print("TUE");
-        break;
-        case WED:
-        Serial.print("WED");
-        break;
-        case THU:
-        Serial.print("THU");
-        break;
-        case FRI:
-        Serial.print("FRI");
-        break;
-        case SAT:
-        Serial.print("SAT");
-        break;
-        case SUN:
-        Serial.print("SUN");
-        break;
-    }
-    Serial.println(" ");
+
+void loop() {
+
+   DateTime now = rtc.now();
+
+  //buffer can be defined using following combinations:
+  //hh - the hour with a leading zero (00 to 23)
+  //mm - the minute with a leading zero (00 to 59)
+  //ss - the whole second with a leading zero where applicable (00 to 59)
+  //YYYY - the year as four digit number
+  //YY - the year as two digit number (00-99)
+  //MM - the month as number with a leading zero (01-12)
+  //MMM - the abbreviated English month name ('Jan' to 'Dec')
+  //DD - the day as number with a leading zero (01 to 31)
+  //DDD - the abbreviated English day name ('Mon' to 'Sun')
+
+   char buf1[] = "hh:mm";
+   Serial.println(now.toString(buf1));
+
+   char buf2[] = "YYMMDD-hh:mm:ss";
+   Serial.println(now.toString(buf2));
+
+   char buf3[] = "Today is DDD, MMM DD YYYY";
+   Serial.println(now.toString(buf3));
+
+   char buf4[] = "MM-DD-YYYY";
+   Serial.println(now.toString(buf4));
+
+   delay(1000);
 }
