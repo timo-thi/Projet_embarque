@@ -1,14 +1,14 @@
 #include "init_utilities.hpp"
 
 // Global variables
-const int green_button = 4; // Green button pin on D4 shield interface
-const int red_button = 5; // Red button pin on D4 shield interface
+const int green_button = 8; // Green button pin on D4 shield interface
+const int red_button = 9; // Red button pin on D4 shield interface
 unsigned int button_timer = 5000; // Time to wait to consider a button press in ms
 unsigned int configTimeout = 15; // Time to wait before config inactivity timeout
 int timer = 5000; // Time counter in ms, will be decreased if a button is pressed, or reset at button_timer if new button pressed.
 
 bool ledState = false; // The ledState shows if the led is on or off however the color
-ChainableLED led(7, 8, 1); // This object is the RGB LED handler
+ChainableLED led(6, 7, 1); // This object is the RGB LED handler
 
 bool red_bascule = false; // Indicates if the red button is pressed
 bool green_bascule = false; // Indicates if the green button is pressed
@@ -81,7 +81,7 @@ void red_button_interrupt(){
 
 // Buttons
 
-ISR(PCINT2_vect){
+ISR(PCINT0_vect){
 	green_button_interrupt();
 	red_button_interrupt();
 }
@@ -95,8 +95,8 @@ void init_buttons(){
 	pinMode(green_button, INPUT_PULLUP);
 
 	noInterrupts();
-	PCICR |= B00000100; // Enable PCMK2 (Group 2 : PCINT16 to PCINT23 ~= PIN7 to PIN0)
-	PCMSK2 |= B00110000; // D4 and D5 will trigger
+	PCICR |= B00000001; // Enable PCMK2 (Group 2 : PCINT16 to PCINT23 ~= PIN7 to PIN0)
+	PCMSK0 |= B00000011; // D4 and D5 will trigger
 	interrupts();
 }
 
@@ -146,6 +146,3 @@ void initialisation_interruption_tim(long uSecs){
 
 //GPS
 
-void init_GPS(){
-	SoftSerial.begin(9600);
-}

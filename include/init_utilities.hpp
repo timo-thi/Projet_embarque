@@ -48,8 +48,6 @@ extern unsigned int configTimeout;
 //// Capteurs ////
 
 // GPS
-SoftwareSerial SoftSerial(2, 3);
 
-void  init_GPS();
 
 #endif
