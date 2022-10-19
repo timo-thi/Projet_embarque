@@ -24,7 +24,6 @@ typedef struct config_param {
 
 static Config_param LOG_INTERVALL = {"LOG_INTERVALL", 0, 10, 1};
 static Config_param FILE_MAX_SIZE = {"FILE_MAX_SIZE", 2, 4096, 1};
-static Config_param FILE_MAX_SIZE = {"FILE_MAX_SIZE", 4, 4096, 1};
 static Config_param TIMEOUT = {"TIMEOUT", 6, 1, 0, 1};
 static Config_param LUMIN = {"LUMIN", 8, 1, 0, 1};
 static Config_param LUMIN_LOW = {"LUMIN_LOW", 10, 255, 0, 1023};
