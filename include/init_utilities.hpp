@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <SoftwareSerial.h>
 #include "ChainableLED.h"
 #ifndef INIT_UTILITIES_FUNCTIONS
 #define INIT_UTILITIES_FUNCTIONS
@@ -43,5 +44,12 @@ ISR(TIMER1_COMPA_vect);
 void initialisation_interruption_tim(long uSecs);
 extern int timer;
 extern unsigned int configTimeout;
+
+//// Capteurs ////
+
+// GPS
+SoftwareSerial SoftSerial(2, 3);
+
+void  init_GPS();
 
 #endif

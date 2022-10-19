@@ -141,3 +141,11 @@ void initialisation_interruption_tim(long uSecs){
 	
 	interrupts(); // Ensable interrupts when configuration is complete
 }
+
+//// Capteurs ////
+
+//GPS
+
+void init_GPS(){
+	SoftSerial.begin(9600);
+}
