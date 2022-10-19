@@ -20,7 +20,7 @@ typedef struct config_param {
 	int default_value;
 	int min_value;
 	int max_value;
-	int value;
+	// int value;
 } Config_param;
 
 extern Config_param LOG_INTERVALL;

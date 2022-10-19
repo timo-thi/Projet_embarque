@@ -13,7 +13,6 @@ void change_mode(int button){
     The following mode is deduced from the current mode and the pressed button.
     The current mode is found from the include path.
     */
-    if (Serial) Serial.println(collect_params.mode);
     switch (collect_params.mode) {
         case 0: // Current mode is standard
             if (button == green_button){
