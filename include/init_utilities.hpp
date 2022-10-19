@@ -69,4 +69,12 @@ void initialisation_interruption_tim(long uSecs);
 extern int timer;
 extern unsigned int configTimeout;
 
+//Led error handling
+void sd_card_access_error();
+void sd_card_full_error();
+void consistency_data_error();
+void sensor_access_error();
+void gps_access_error();
+void rtc_clock_access_error();
+
 #endif
