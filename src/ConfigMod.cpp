@@ -88,7 +88,7 @@ void exec_param(String command, int value, bool to_store)
             if (to_store){
                 if (value > params_point[i]->max_value || value < params_point[i]->min_value) {
                     Serial.println(F("Value exceed max or min. Please refer to manual."));
-                    break;
+                    return;
                 }
                 // params_point[i]->value = value;
                 send_eeprom_data(params_point[i]->adr, value); // params_point[i]->value);
