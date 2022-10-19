@@ -42,6 +42,7 @@ void init_rgb_led();
 // Timers
 ISR(TIMER1_COMPA_vect);
 void initialisation_interruption_tim(long uSecs);
+void initialisation_interruption_tim2();
 extern int timer;
 extern unsigned int configTimeout;
 
