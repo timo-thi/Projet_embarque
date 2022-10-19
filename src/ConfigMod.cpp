@@ -2,21 +2,23 @@
 #include <ConfigMod.hpp>
 #include "eeprom_utilities.hpp"
 
-Config_param LOG_INTERVALL = {"LOG_INTERVALL", 0, 10, 1, fetch_eeprom_data(0)};
-Config_param FILE_MAX_SIZE = {"FILE_MAX_SIZE", 2, 4096, 1, fetch_eeprom_data(2)};
-Config_param TIMEOUT = {"TIMEOUT", 6, 1, 0, 1, fetch_eeprom_data(4)};
-Config_param LUMIN = {"LUMIN", 8, 1, 0, 1, fetch_eeprom_data(6)};
-Config_param LUMIN_LOW = {"LUMIN_LOW", 10, 255, 0, 1023, fetch_eeprom_data(8)};
-Config_param LUMIN_HIGH = {"LUMIN_HIGH", 12, 768, 0, 1023, fetch_eeprom_data(10)};
-Config_param TEMP_AIR = {"TEMP_AIR", 14, 1, 0, 1, fetch_eeprom_data(12)};
-Config_param MIN_TEMP_AIR = {"MIN_TEMP_AIR", 16, -10, -40, 85, fetch_eeprom_data(14)};
-Config_param MAX_TEMP_AIR = {"MAX_TEMP_AIR", 16, 60, -40, 85, fetch_eeprom_data(16)};
-Config_param HYGR = {"HYGR", 18, 1, 0, 1, fetch_eeprom_data(18)};
-Config_param HYGR_MINT = {"HYGR_MINT", 20, 0, -40, 85, fetch_eeprom_data(20)};
-Config_param HYGR_MAXT = {"HYGR_MAXT", 22, 50, -40, 85, fetch_eeprom_data(22)};
-Config_param PRESSURE = {"PRESSURE", 24, 0, 0, 1, fetch_eeprom_data(24)};
-Config_param PRESSURE_MIN = {"PRESSURE_MIN", 26, 850, 300, 1100, fetch_eeprom_data(26)};
-Config_param PRESSURE_MAX = {"PRESSURE_MAX", 28, 1080, 300, 1100, fetch_eeprom_data(28)};
+Config_param LOG_INTERVALL = {"LOG_INTERVALL", 0, 10, 1}; //, fetch_eeprom_data(0)};
+Config_param FILE_MAX_SIZE = {"FILE_MAX_SIZE", 2, 4096, 1}; //, fetch_eeprom_data(2)};
+Config_param TIMEOUT = {"TIMEOUT", 6, 1, 0, 1}; //, fetch_eeprom_data(4)};
+Config_param LUMIN = {"LUMIN", 8, 1, 0, 1}; //, fetch_eeprom_data(6)};
+Config_param LUMIN_LOW = {"LUMIN_LOW", 10, 255, 0, 1023}; //, fetch_eeprom_data(8)};
+Config_param LUMIN_HIGH = {"LUMIN_HIGH", 12, 768, 0, 1023}; //, fetch_eeprom_data(10)};
+Config_param TEMP_AIR = {"TEMP_AIR", 14, 1, 0, 1}; //, fetch_eeprom_data(12)};
+Config_param MIN_TEMP_AIR = {"MIN_TEMP_AIR", 16, -10, -40, 85}; //, fetch_eeprom_data(14)};
+Config_param MAX_TEMP_AIR = {"MAX_TEMP_AIR", 16, 60, -40, 85}; //, fetch_eeprom_data(16)};
+Config_param HYGR = {"HYGR", 18, 1, 0, 1}; //, fetch_eeprom_data(18)};
+Config_param HYGR_MINT = {"HYGR_MINT", 20, 0, -40, 85}; //, fetch_eeprom_data(20)};
+Config_param HYGR_MAXT = {"HYGR_MINT", 22, 50, -40, 85}; //, fetch_eeprom_data(22)};
+Config_param PRESSURE = {"PRESSURE", 24, 0, 0, 1}; //, fetch_eeprom_data(24)};
+Config_param PRESSURE_MIN = {"PRESSURE_MIN", 26, 850, 300, 1100}; //, fetch_eeprom_data(26)};
+Config_param PRESSURE_MAX = {"PRESSURE_MAX", 28, 1080, 300, 1100}; //, fetch_eeprom_data(28)};
+
+Config_param *params_point[15] = {&LOG_INTERVALL, &FILE_MAX_SIZE, &TIMEOUT, &LUMIN, &LUMIN_LOW, &LUMIN_HIGH, &TEMP_AIR, &MIN_TEMP_AIR, &MAX_TEMP_AIR, &HYGR, &HYGR_MINT, &HYGR_MAXT, &PRESSURE, &PRESSURE_MIN, &PRESSURE_MAX};
 
 void wait_for_param();
 void exec_param(String command, int value, bool to_store);
@@ -44,7 +46,7 @@ bool wait_for_entry(String *command, int *value, bool *to_store){
         return true;
     }
     *command = Serial.readString(); // Read string and store it directly into command
-    int pos = command->indexOf("="); // Check if "=" chracter occurs in command
+    int pos = command->indexOf(F("=")); // Check if "=" chracter occurs in command
     // Serial.print("pos : ");Serial.println(pos); // DEBUG
     if (pos != -1){ // If "=" found in command
         *to_store = true;
@@ -61,9 +63,9 @@ bool wait_for_entry(String *command, int *value, bool *to_store){
 void wait_for_param()
 {
     // Start serial custom for user entry
-    Serial.println("Entrez ce que vous souhaitez changer");
-    Serial.println("------------------------------------");
-    Serial.print("WWW_User:~$ ");
+    Serial.println(F("Entrez ce que vous souhaitez changer"));
+    Serial.println(F("------------------------------------"));
+    Serial.print(F("WWW_User:~$ "));
 
     String command;
     bool to_store; // Store if an equal sign was stored, and deduce if the value variable have to be stored
@@ -71,162 +73,59 @@ void wait_for_param()
     if (wait_for_entry(&command, &value, &to_store)) return; // If true, return to exit config mode
     
     timer = configTimeout;
-    Serial.print("Found command : "); // DEBUG
-    Serial.print(command);           // or
-    Serial.print("=");              // user interface
-    Serial.println(value);         // custom
+    // Serial.print("Found command : "); // DEBUG
+    Serial.println(command);           // replace with : Serial.print(command);           // or
+    // Serial.print("=");              // user interface
+    // Serial.println(value);         // custom
 
     exec_param(command, value, to_store);
 }
 
 void exec_param(String command, int value, bool to_store)
 {
-    // Check wich command is concerned, or, tell if not found
-    if (command == String("LOG_INTERVALL"))
-    {
-        if (to_store){
-            LOG_INTERVALL.value = value;
-            Serial.print("Updated LOG_INTERVALL, set value : "); Serial.println(LOG_INTERVALL.value);
-        } else {
-            Serial.print("Current value : ");Serial.println(LOG_INTERVALL.value);
+    for (int i = 0; i < 15; i++){
+        if (command == params_point[i]->name){
+            if (to_store){
+                if (value > params_point[i]->max_value || value < params_point[i]->min_value) {
+                    Serial.println(F("Value exceed max or min. Please refer to manual."));
+                    break;
+                }
+                // params_point[i]->value = value;
+                send_eeprom_data(params_point[i]->adr, value); // params_point[i]->value);
+                Serial.print(F("Updated params_point[i]->, set value : ")); Serial.println(value);
+            } else {
+                Serial.print(F("Current value : "));Serial.println(fetch_eeprom_data(params_point[i]->adr));
+            }
+            return;
         }
     }
-    else if (command == String("FILE_MAX_SIZE"))
+    if(command == F("RESET"))
     {
-        if (to_store){
-            FILE_MAX_SIZE.value = value;
-            Serial.print("Updated FILE_MAX_SIZE, set value : "); Serial.println(FILE_MAX_SIZE.value);
-        } else {
-            Serial.print("Current value : ");Serial.println(FILE_MAX_SIZE.value);
+        Serial.print(F("Reseting..."));
+        for (int i = 0; i < 15; i++){
+            send_eeprom_data(params_point[i]->adr, params_point[i]->default_value);
+            // params_point[i]->value = fetch_eeprom_data(params_point[i]->adr);
         }
+        Serial.println(F("Done."));
     }
-    else if(command == String("TIMEOUT"))
+    else if(command == F("VERSION"))
     {
-        if (to_store){
-            TIMEOUT.value = value;
-            Serial.print("Updated TIMEOUT, set value : "); Serial.println(TIMEOUT.value);
-        } else {
-            Serial.print("Current value : ");Serial.println(TIMEOUT.value);
-        }
+        Serial.println(F("Version and serial number"));
     }
-    else if(command == String("LUMIN"))
+    else if(command.startsWith(F("CLOCK")))
     {
-        if (to_store){
-            LUMIN.value = value;
-            Serial.print("Updated LUMIN, set value : "); Serial.println(LUMIN.value);
-        } else {
-            Serial.print("Current value : ");Serial.println(LUMIN.value);
-        }
+        Serial.println(F("Clock..."));
     }
-    else if(command == String("LUMIN_LOW"))
+    else if(command == F("DATE"))
     {
-        if (to_store){
-            LUMIN_LOW.value = value;
-            Serial.print("Updated LUMIN_LOW, set value : "); Serial.println(LUMIN_LOW.value);
-        } else {
-            Serial.print("Current value : ");Serial.println(LUMIN_LOW.value);
-        }
+        Serial.println(F("Date..."));
     }
-    else if(command == String("LUMIN_HIGH"))
+    else if(command == F("DAY"))
     {
-        if (to_store){
-            LUMIN_HIGH.value = value;
-            Serial.print("Updated LUMIN_HIGH, set value : "); Serial.println(LUMIN_HIGH.value);
-        } else {
-            Serial.print("Current value : ");Serial.println(LUMIN_HIGH.value);
-        }
-    }
-    else if(command == String("TEMP_AIR"))
-    {
-        if (to_store){
-            TEMP_AIR.value = value;
-            Serial.print("Updated TEMP_AIR, set value : "); Serial.println(TEMP_AIR.value);
-        } else {
-            Serial.print("Current value : ");Serial.println(TEMP_AIR.value);
-        }
-    }
-    else if(command == String("MIN_TEMP_AIR"))
-    {
-        if (to_store){
-            MIN_TEMP_AIR.value = value;
-            Serial.print("Updated MIN_TEMP_AIR, set value : "); Serial.println(MIN_TEMP_AIR.value);
-        } else {
-            Serial.print("Current value : ");Serial.println(MIN_TEMP_AIR.value);
-        }
-    }
-    else if(command == String("MAX_TEMP_AIR"))
-    {
-        if (to_store){
-            MAX_TEMP_AIR.value = value;
-            Serial.print("Updated MAX_TEMP_AIR, set value : "); Serial.println(MAX_TEMP_AIR.value);
-        } else {
-            Serial.print("Current value : ");Serial.println(MAX_TEMP_AIR.value);
-        }
-    }
-    else if(command == String("HYGR"))
-    {
-        if (to_store){
-            HYGR.value = value;
-            Serial.print("Updated HYGR, set value : "); Serial.println(HYGR.value);
-        } else {
-            Serial.print("Current value : ");Serial.println(HYGR.value);
-        }
-    }
-    else if(command == String("HYGR_MINT"))
-    {
-        if (to_store){
-            HYGR_MINT.value = value;
-            Serial.print("Updated HYGR_MINT, set value : "); Serial.println(HYGR_MINT.value);
-        } else {
-            Serial.print("Current value : ");Serial.println(HYGR_MINT.value);
-        }
-    }
-    else if(command == String("HYGR_MAXT"))
-    {
-        if (to_store){
-            HYGR_MAXT.value = value;
-            Serial.print("Updated HYGR_MAXT, set value : "); Serial.println(HYGR_MAXT.value);
-        } else {
-            Serial.print("Current value : ");Serial.println(HYGR_MAXT.value);
-        }
-    }
-    else if(command == String("PRESSURE"))
-    {
-        if (to_store){
-            PRESSURE.value = value;
-            Serial.print("Updated PRESSURE, set value : "); Serial.println(PRESSURE.value);
-        } else {
-            Serial.print("Current value : ");Serial.println(PRESSURE.value);
-        }
-    }
-    else if(command == String("PRESSURE_MAX"))
-    {
-        if (to_store){
-            PRESSURE_MAX.value = value;
-            Serial.print("Updated PRESSURE_MAX, set value : "); Serial.println(PRESSURE_MAX.value);
-        } else {
-            Serial.print("Current value : ");Serial.println(PRESSURE_MAX.value);
-        }
-    }
-    else if(command == String("PRESSURE_MIN"))
-    {
-        if (to_store){
-            PRESSURE_MIN.value = value;
-            Serial.print("Updated PRESSURE_MIN, set value : "); Serial.println(PRESSURE_MIN.value);
-        } else {
-            Serial.print("Current value : ");Serial.println(PRESSURE_MIN.value);
-        }
-    }
-    else if(command == "RESET")
-    {
-        Serial.print("Reseting...");
-    }
-    else if(command == String("VERSION"))
-    {
-        Serial.println("Version and serial number");
+        Serial.println(F("Day..."));
     }
     else
     {
-        Serial.println("Command not found X");
+        Serial.println(F("Command not found X"));
     }
 }
