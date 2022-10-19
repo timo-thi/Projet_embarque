@@ -2,6 +2,22 @@
 #include <ConfigMod.hpp>
 #include "eeprom_utilities.hpp"
 
+static Config_param LOG_INTERVALL = {"LOG_INTERVALL", 0, 10, 1};
+static Config_param FILE_MAX_SIZE = {"FILE_MAX_SIZE", 2, 4096, 1};
+static Config_param TIMEOUT = {"TIMEOUT", 6, 1, 0, 1};
+static Config_param LUMIN = {"LUMIN", 8, 1, 0, 1};
+static Config_param LUMIN_LOW = {"LUMIN_LOW", 10, 255, 0, 1023};
+static Config_param LUMIN_HIGH = {"LUMIN_HIGH", 12, 768, 0, 1023};
+static Config_param TEMP_AIR = {"TEMP_AIR", 14, 1, 0, 1};
+static Config_param MIN_TEMP_AIR = {"MIN_TEMP_AIR", 16, -10, -40, 85};
+static Config_param MAX_TEMP_AIR = {"MAX_TEMP_AIR", 16, 60, -40, 85};
+static Config_param HYGR = {"HYGR", 18, 1, 0, 1};
+static Config_param HYGR_MINT = {"HYGR_MINT", 20, 0, -40, 85};
+static Config_param HYGR_MAXT = {"HYGR_MAXT", 22, 50, -40, 85};
+static Config_param PRESSURE = {"PRESSURE", 24, 0, 0, 1};
+static Config_param PRESSURE_MIN = {"PRESSURE_MIN", 26, 850, 300, 1100};
+static Config_param PRESSURE_MAX = {"PRESSURE_MAX", 28, 1080, 300, 1100};
+
 void wait_for_param();
 
 void check_config()
@@ -22,21 +38,11 @@ void check_config()
 
 bool wait_for_entry(String *command, int *value){
     while ((Serial.available() <= 0) && (timer >= 0)) {} // Wait for something to occur in serial buffer OR timeout
-    delay(1000);
     if (timer <= 0) // if the timout stopped the while, return true to quit config mode
     {
         return true;
     }
-    Serial.print("available : ");Serial.println(Serial.available());
-    Serial.print("first : ");Serial.println(Serial.peek());
-    // *command = Serial.readString(); // Read string and store it directly into command
-    
-    char my_com[50];
-    for (int i = 0; i < Serial.available(); i++){
-        my_com[i] = Serial.read();
-    }
-    command->concat(my_com);
-    Serial.print("input : ");Serial.println(*command);
+    *command = Serial.readString(); // Read string and store it directly into command
     int pos = command->indexOf("="); // Check if "=" chracter occurs in command
     Serial.print("pos : ");Serial.println(pos); // DEBUG
     if (pos != -1){ // If "=" found in command
