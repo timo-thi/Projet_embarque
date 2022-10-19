@@ -22,17 +22,26 @@ void check_config()
 
 bool wait_for_entry(String *command, int *value){
     while ((Serial.available() <= 0) && (timer >= 0)) {} // Wait for something to occur in serial buffer OR timeout
+    delay(1000);
     if (timer <= 0) // if the timout stopped the while, return true to quit config mode
     {
         return true;
     }
-    *command = Serial.readString(); // Read string and store it directly into command
+    Serial.print("available : ");Serial.println(Serial.available());
+    Serial.print("first : ");Serial.println(Serial.peek());
+    // *command = Serial.readString(); // Read string and store it directly into command
+    
+    char my_com[50];
+    for (int i = 0; i < Serial.available(); i++){
+        my_com[i] = Serial.read();
+    }
+    command->concat(my_com);
+    Serial.print("input : ");Serial.println(*command);
     int pos = command->indexOf("="); // Check if "=" chracter occurs in command
-    // Serial.print("pos : ");Serial.println(pos); // DEBUG
+    Serial.print("pos : ");Serial.println(pos); // DEBUG
     if (pos != -1){ // If "=" found in command
         *value = command->substring(pos+1).toInt(); // Isolate value and convert into integer or long.
-        *command = command->substring(0, pos); // Isolate command
-        command->trim(); // Remove every parasite end chracters.
+        *command = command->substring(0, pos); // Isolate command.available()
     }
     else {
         command->trim(); // Remove every parasite end chracters.
@@ -52,10 +61,10 @@ void wait_for_param()
     if (wait_for_entry(&command, &value)) return; // If true, return to exit config mode
     
     timer = configTimeout;
-    // Serial.print("Found command : "); // DEBUG
-    // Serial.print(command);           // or
-    // Serial.print("=");              // user interface
-    // Serial.println(value);         // custom
+    Serial.print("Found command : "); // DEBUG
+    Serial.print(command);           // or
+    Serial.print("=");              // user interface
+    Serial.println(value);         // custom
 
     // Check wich command is concerned, or, tell if not found
     if(command == String("LOG_INTERVALL"))
