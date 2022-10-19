@@ -9,11 +9,18 @@ void setup()
 {
     init_rgb_led();
     start_serial();
+    init_BME280();
+    init_RTC();
+    led.setColorRGB(0,255,15,255);
     
 }
+
 void loop()
 {
     LightSensor();
-    led.setColorRGB(0,255,255,0);
+    
     WeatherSensor();
+    RTC_Clock();
+
+    delay(2000);
 }
