@@ -17,9 +17,10 @@ struct Collect_params {
 typedef struct config_param {
 	String name;
 	int adr;
-	int value;
+	int default_value;
 	int min_value;
 	int max_value;
+	int value;
 } Config_param;
 
 extern Config_param LOG_INTERVALL;
