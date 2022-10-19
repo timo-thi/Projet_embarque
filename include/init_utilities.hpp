@@ -17,29 +17,27 @@ struct Collect_params {
 typedef struct config_param {
 	String name;
 	int adr;
-	int value;
+	int default_value;
 	int min_value;
 	int max_value;
+	int value;
 } Config_param;
 
-static Config_param LOG_INTERVALL = {"LOG_INTERVALL", 0, 10, 1};
-static Config_param FILE_MAX_SIZE = {"FILE_MAX_SIZE", 2, 4096, 1};
-static Config_param FILE_MAX_SIZE = {"FILE_MAX_SIZE", 4, 4096, 1};
-static Config_param TIMEOUT = {"TIMEOUT", 6, 1, 0, 1};
-static Config_param LUMIN = {"LUMIN", 8, 1, 0, 1};
-static Config_param LUMIN_LOW = {"LUMIN_LOW", 10, 255, 0, 1023};
-static Config_param LUMIN_HIGH = {"LUMIN_HIGH", 12, 768, 0, 1023};
-static Config_param TEMP_AIR = {"TEMP_AIR", 14, 1, 0, 1};
-static Config_param MIN_TEMP_AIR = {"MIN_TEMP_AIR", 16, -10, -40, 85};
-static Config_param MAX_TEMP_AIR = {"MAX_TEMP_AIR", 16, 60, -40, 85};
-static Config_param HYGR = {"HYGR", 18, 1, 0, 1};
-static Config_param HYGR_MINT = {"HYGR_MINT", 20, 0, -40, 85};
-static Config_param HYGR_MAXT = {"HYGR_MAXT", 22, 50, -40, 85};
-static Config_param PRESSURE = {"PRESSURE", 24, 0, 0, 1};
-static Config_param PRESSURE_MIN = {"PRESSURE_MIN", 26, 850, 300, 1100};
-static Config_param PRESSURE_MAX = {"PRESSURE_MAX", 28, 1080, 300, 1100};
-
-
+extern Config_param LOG_INTERVALL;
+extern Config_param FILE_MAX_SIZE;
+extern Config_param TIMEOUT;
+extern Config_param LUMIN;
+extern Config_param LUMIN_LOW;
+extern Config_param LUMIN_HIGH;
+extern Config_param TEMP_AIR;
+extern Config_param MIN_TEMP_AIR;
+extern Config_param MAX_TEMP_AIR;
+extern Config_param HYGR;
+extern Config_param HYGR_MINT;
+extern Config_param HYGR_MAXT;
+extern Config_param PRESSURE;
+extern Config_param PRESSURE_MIN;
+extern Config_param PRESSURE_MAX;
 
 // Extern from main
 extern Collect_params collect_params;
