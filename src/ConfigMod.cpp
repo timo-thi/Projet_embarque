@@ -57,18 +57,6 @@ void wait_for_param()
     static int PRESSURE_MIN = 850;
     static int PRESSURE_MAX = 1080;
 
-    // Answer handeling for a command
-    bool C = 0;
-    if (Serial.available() > 0) //Permet de voir ce qui sera écrit
-    {
-        C = Serial.read();  //pose à C la valeur écrite
-        if(C == 1)
-        {
-            return ;    //aucun retour nécessaire
-        }
-        else Serial.println("Erreur "); //arrêt
-    }
-
     // Start serial custom for user entry
     Serial.println("Entrez ce que vous souhaitez changer");
     Serial.println("------------------------------------");
