@@ -53,7 +53,7 @@ void loop()
 		}
 		collect_params.eco_alternate_gps = (collect_params.mode == 1) ? !collect_params.eco_alternate_gps : collect_params.eco_alternate_gps;
 		collect_params.last_collect_time = (unsigned long)rtc.now().secondstime();
-		//store in SD card
+		Write_SD_Card(&lumin, &hygr, &pressure, &temp);
 	}
 }
 
