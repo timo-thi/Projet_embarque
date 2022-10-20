@@ -1,13 +1,16 @@
 #include <Arduino.h>
 #include "ChainableLED.h"
+#include "RTClib.h"
+#include "eeprom_utilities.hpp"
 #ifndef INIT_UTILITIES_FUNCTIONS
 #define INIT_UTILITIES_FUNCTIONS
+
+
 
 // Sensor collect params struct
 struct Collect_params {
 	int interval;
 	int last_collect_time;
-	int current_time;
 	bool eco_alternate_gps;
 	int mode;
 	int previous_mode;
@@ -59,6 +62,7 @@ void stop_serial();
 // Buttons
 void init_buttons();
 
+
 // RGB LED
 
 void init_rgb_led();
@@ -66,6 +70,7 @@ void init_rgb_led();
 // Timers
 ISR(TIMER1_COMPA_vect);
 void initialisation_interruption_tim(long uSecs);
+
 extern int timer;
 extern unsigned int configTimeout;
 
@@ -77,4 +82,9 @@ void sensor_access_error();
 void gps_access_error();
 void rtc_clock_access_error();
 
+// init params
+void init_params();
+
 #endif
+
+
