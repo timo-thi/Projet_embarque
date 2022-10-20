@@ -3,39 +3,26 @@
 
 // SD Card
 
-const int CS_pin = 4;
-
+#define CS_pin 4
+#define File_Name "data.csv"
 File myFile;
-String prefix_name = "Données_du_";
 
-void inti_SD_card(){
-    while (!SD.begin(SPI_HALF_SPEED, CS_pin)){
-        Serial.println("initialization failed");
+//String File_Name = "data.csv";
+
+void Write_SD_Card(String, String GPS){ //
+    SD.begin(SPI_HALF_SPEED, CS_pin);
+	myFile = SD.open(File_Name, FILE_WRITE);
+
+    Serial.println("Writing to data.csv");
+    myFile.println();
+    myFile.close();
+
+    myFile = SD.open(File_Name, FILE_READ);
+
+    while (myFile.available()) {
+        Serial.write(myFile.read());
     }
-	pinMode(SS, OUTPUT);
-    Serial.print("avant SD.open");
-	myFile = SD.open("Données_du_", FILE_WRITE);
-    Serial.print("avant SD.open");
-
-   if (myFile) {
-      Serial.println("Writing to test.txt");
-      myFile.println("testing 1, 2, 3");
-      myFile.close();
-   }
-
-   else { Serial.println("error opening test.txt"); }
-
-   myFile = SD.open("Données_du_");
-
-   if (myFile) {
-      Serial.println("\ntest.txt:");
-      while (myFile.available()) {
-         Serial.write(myFile.read());
-      }
-      myFile.close();
-   }
-
-   else { Serial.println("error opening test.txt"); }
+    myFile.close();
 
 
 }

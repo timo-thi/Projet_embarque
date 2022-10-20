@@ -12,8 +12,7 @@ void setup() {
   check_config();
   led.setColorRGB(0, 0, 255, 0);
   initialisation_interruption_tim(1000);
-  Serial.println("test");
-  inti_SD_card();
+  Write_SD_Card();
 }
 
 void loop()
