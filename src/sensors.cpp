@@ -112,4 +112,8 @@ void Sensors_Tests(){
 
 }
 
+String actTime(){
+return rtc.now().toString("=> YY:MM:DD hh:mm:ss");
+}
+
 

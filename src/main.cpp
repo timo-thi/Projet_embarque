@@ -12,10 +12,10 @@ void setup() {
   	// put your setup code here, to run once:
 	init_rgb_led();
 	init_buttons();
+	init_RTC();
 	check_config();
   	start_serial();
 	init_BME280();
-	init_RTC();
 	init_params(rtc.now().secondstime());
 	Serial.println(collect_params.last_collect_time);
 	led.setColorRGB(0, 0, 255, 0);

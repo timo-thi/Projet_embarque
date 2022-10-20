@@ -2,6 +2,7 @@
 #include <ConfigMod.hpp>
 #include "eeprom_utilities.hpp"
 #include "RTClib.h"
+#include "sensors.hpp"
 
 Config_param LOG_INTERVALL = {"LOG_INTERVALL", 0, 10, 1}; //, fetch_eeprom_data(0)};
 Config_param FILE_MAX_SIZE = {"FILE_MAX_SIZE", 2, 4096, 1}; //, fetch_eeprom_data(2)};
@@ -65,8 +66,8 @@ bool wait_for_entry(String *command, int *value, bool *to_store){
 void wait_for_param()
 {
     // Start serial custom for user entry
-    Serial.println(F("Entrez ce que vous souhaitez changer"));
-    Serial.println(F("------------------------------------"));
+    // Serial.println(F("Entrez ce que vous souhaitez changer"));
+    // Serial.println(F("------------------------------------"));
     Serial.print(F("WWW_User:~$ "));
 
     String command;
@@ -102,12 +103,12 @@ void exec_param(String command, int value, bool to_store)
         if (command == params_point[i]->name){
             if (to_store){
                 if ((value > params_point[i]->max_value && params_point[i]->max_value) || value < params_point[i]->min_value) {
-                    Serial.println(F("Value exceed max or min. Please refer to manual."));
+                    Serial.println(F("Min/Max overflow"));
                     return;
                 }
                 // params_point[i]->value = value;
                 send_eeprom_data(params_point[i]->adr, value); // params_point[i]->value);
-                Serial.print(F("Updated params_point[i]->, set value : ")); Serial.println(value);
+                Serial.print(F("New value : ")); Serial.println(value);
             } else {
                 Serial.print(F("Current value : "));Serial.println(fetch_eeprom_data(params_point[i]->adr));
             }
@@ -130,32 +131,28 @@ void exec_param(String command, int value, bool to_store)
     }
     else if(command.startsWith(F("CLOCK")))
     {
-        RTC_DS1307 clock;
-        clock.begin();
         if (extract_clock_param(command.substring(6), &hm, &mj, &sa, ":")){
             Serial.println(F("Format error"));
             return;
         }
-        clock.adjust(DateTime(clock.now().year(), clock.now().month(), clock.now().day(), hm, mj, sa));
-        Serial.println(clock.now().toString("=> YY:MM:DD hh:mm:ss")); // Serial.println(F("Clock adjusted"));
+        rtc.adjust(DateTime(rtc.now().year(), rtc.now().month(), rtc.now().day(), hm, mj, sa));
+        Serial.println(actTime()); // Serial.println(F("rtc adjusted"));
     }
     else if(command.startsWith(F("DATE")))
     {
-        RTC_DS1307 clock;
-        clock.begin();
         if (extract_clock_param(command.substring(5), &hm, &mj, &sa, ",")){
             Serial.println(F("Format error"));
             return;
         }
-        clock.adjust(DateTime(sa, hm, mj, clock.now().hour(), clock.now().minute(), clock.now().second()));
-        Serial.println(clock.now().toString("=> YY:MM:DD hh:mm:ss")); // Serial.println(F("Clock adjusted"));
+        rtc.adjust(DateTime(sa, hm, mj, rtc.now().hour(), rtc.now().minute(), rtc.now().second()));
+        Serial.println(actTime()); // Serial.println(F("rtc adjusted"));
     }
     // else if(command == F("DAY"))
     // {
     //     Serial.println(F("Day..."));
     // }
-    else
-    {
-        Serial.println(F("Command not found X"));
-    }
+    // else
+    // {
+    //     Serial.println(F("Command not found X"));
+    // }
 }
