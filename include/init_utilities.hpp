@@ -3,6 +3,8 @@
 #ifndef INIT_UTILITIES_FUNCTIONS
 #define INIT_UTILITIES_FUNCTIONS
 
+
+
 // Sensor collect params struct
 struct Collect_params {
 	int interval;
@@ -59,6 +61,7 @@ void stop_serial();
 // Buttons
 void init_buttons();
 
+
 // RGB LED
 
 void init_rgb_led();
@@ -66,7 +69,10 @@ void init_rgb_led();
 // Timers
 ISR(TIMER1_COMPA_vect);
 void initialisation_interruption_tim(long uSecs);
+
 extern int timer;
 extern unsigned int configTimeout;
 
 #endif
+
+

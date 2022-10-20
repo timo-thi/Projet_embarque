@@ -1,14 +1,22 @@
 #include "init_utilities.hpp"
+
 #include "ConfigMod.hpp"
+#include "sensors.hpp"
 
 Collect_params collect_params;
+int a;
+  float b,c,d,e;
+  DateTime f;
 
 void setup() {
-	// put your setup code here, to run once:
-	// start_serial();
-	init_rgb_led();
-	init_buttons();
-	check_config();
+  // put your setup code here, to run once:
+  // start_serial();
+  init_rgb_led();
+  start_serial();
+  init_BME280();
+  init_RTC();
+  init_buttons();
+  check_config();
 	led.setColorRGB(0, 0, 255, 0);
 	initialisation_interruption_tim(1000);
 }

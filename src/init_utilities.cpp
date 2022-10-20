@@ -7,6 +7,7 @@ unsigned int button_timer = 5000; // Time to wait to consider a button press in 
 unsigned int configTimeout = 30; // Time to wait before config inactivity timeout
 int timer = 5000; // Time counter in ms, will be decreased if a button is pressed, or reset at button_timer if new button pressed.
 
+
 bool ledState = false; // The ledState shows if the led is on or off however the color
 ChainableLED led(6, 7, 1); // This object is the RGB LED handler
 
@@ -66,6 +67,7 @@ void green_button_interrupt(){
 	} else {
 		green_bascule = false;        // else the button isn't pressed anymore
 	}
+
 }
 
 void red_button_interrupt(){
@@ -140,4 +142,6 @@ void initialisation_interruption_tim(long uSecs){
 	TIMSK1 |= (1 << OCIE1A); // Enable timer
 	
 	interrupts(); // Ensable interrupts when configuration is complete
+
 }
+
