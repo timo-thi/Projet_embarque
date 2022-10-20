@@ -6,4 +6,4 @@
 #include <RTClib.h>
 //SD Card
 
-void Write_SD_Card(int *lumin, float *hygr, float *pressure, float *temp);
+void Write_SD_Card(int lumin, float hygr, float pressure, float temp);

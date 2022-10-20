@@ -17,7 +17,7 @@ void setup() {
   	start_serial();
 	init_BME280();
 	init_params(rtc.now().secondstime());
-	Serial.println(collect_params.last_collect_time);
+	// Serial.println(collect_params.last_collect_time);
 	led.setColorRGB(0, 0, 255, 0);
 	initialisation_interruption_tim(1000);
 }
@@ -39,21 +39,21 @@ void loop()
 		// Std or eco
 		// Serial.print("last ");Serial.println(collect_params.last_collect_time);
 		// Serial.print("last ");Serial.println(dt.secondstime());
-		Serial.print("diff ");Serial.println(rtc.now().secondstime() - collect_params.last_collect_time);
+		// Serial.print("diff ");Serial.println(rtc.now().secondstime() - collect_params.last_collect_time);
 		// Serial.print("intr ");Serial.println(collect_params.interval);
-		if (((int)rtc.now().secondstime() - (int)collect_params.last_collect_time) < (60 * collect_params.interval)) return;
+		if ((rtc.now().secondstime() - collect_params.last_collect_time) < (60 * collect_params.interval)) return;
 		LightSensor(&lumin);
 		WeatherSensor(&temp, &hygr, &pressure);
 		Serial.print("l : ");Serial.println(lumin);
-		Serial.print("h : ");Serial.println(hygr);
-		Serial.print("p : ");Serial.println(pressure);
-		Serial.print("t : ");Serial.println(temp);
-		if (!check_consistency(&lumin, &hygr, &pressure, &temp)) {
-			consistency_data_error();
-		}
+		// Serial.print("h : ");Serial.println(hygr);
+		// Serial.print("p : ");Serial.println(pressure);
+		// Serial.print("t : ");Serial.println(temp);
+		// if (!check_consistency(&lumin, &hygr, &pressure, &temp)) {
+		// 	consistency_data_error();
+		// }
 		collect_params.eco_alternate_gps = (collect_params.mode == 1) ? !collect_params.eco_alternate_gps : collect_params.eco_alternate_gps;
 		collect_params.last_collect_time = (unsigned long)rtc.now().secondstime();
-		Write_SD_Card(&lumin, &hygr, &pressure, &temp);
+		Write_SD_Card(lumin, hygr, pressure, temp);
 	}
 }
 
