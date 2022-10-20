@@ -68,15 +68,13 @@ void LightSensor(int *lux){                         //Light related data
 }
 
 
-void WeatherSensor(float *temperature, float *humidity, float *pressure, float *altitude){
+void WeatherSensor(float *temperature, float *humidity, float *pressure){
   //Fetch the ambient temperature
   *temperature = bme.readTemperature();
   //Fetch the ambient humidity
   *humidity = bme.readHumidity();
   //Fetch the ambient pressure
   *pressure = (bme.readPressure() / 100.0F);
-  //Fetch the estimated altitude
-  *altitude = bme.readAltitude(pressionAuNiveauDeLaMerEnHpa);
 }
 
 void RTC_Clock(DateTime *now){
