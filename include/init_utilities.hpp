@@ -1,5 +1,7 @@
 #include <Arduino.h>
 #include "ChainableLED.h"
+#include "RTClib.h"
+#include "eeprom_utilities.hpp"
 #ifndef INIT_UTILITIES_FUNCTIONS
 #define INIT_UTILITIES_FUNCTIONS
 
@@ -9,7 +11,6 @@
 struct Collect_params {
 	int interval;
 	int last_collect_time;
-	int current_time;
 	bool eco_alternate_gps;
 	int mode;
 	int previous_mode;
@@ -73,6 +74,8 @@ void initialisation_interruption_tim(long uSecs);
 extern int timer;
 extern unsigned int configTimeout;
 
+// init params
+void init_params();
 #endif
 
 

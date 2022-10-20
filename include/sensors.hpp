@@ -22,5 +22,6 @@ void RTC_Clock(DateTime *now);
 
 void Sensors_Tests();
 
+extern RTC_DS1307 rtc;
 
 #endif

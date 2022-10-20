@@ -28,7 +28,7 @@ RTC_DS1307 rtc;
 
 void init_RTC(){
   #ifndef ESP8266
-  while (!Serial); // wait for serial port to connect. Needed for native USB
+  while (!Serial){}; // wait for serial port to connect. Needed for native USB
   #endif
 
   //rtc.begin();

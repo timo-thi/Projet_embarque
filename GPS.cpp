@@ -1,4 +1,6 @@
 #include <SoftwareSerial.h>
+#include "Arduino.h"
+
 SoftwareSerial SoftSerial(3, 4);
 unsigned char buffer[64];                   // buffer array for data receive over serial port
 int count=0;                                // counter for buffer array

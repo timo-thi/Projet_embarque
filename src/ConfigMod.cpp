@@ -137,7 +137,7 @@ void exec_param(String command, int value, bool to_store)
             return;
         }
         clock.adjust(DateTime(clock.now().year(), clock.now().month(), clock.now().day(), hm, mj, sa));
-        Serial.println(clock.now().toString('=> YY:MM:DD hh:mm:ss')); // Serial.println(F("Clock adjusted"));
+        Serial.println(clock.now().toString("=> YY:MM:DD hh:mm:ss")); // Serial.println(F("Clock adjusted"));
     }
     else if(command.startsWith(F("DATE")))
     {
@@ -148,7 +148,7 @@ void exec_param(String command, int value, bool to_store)
             return;
         }
         clock.adjust(DateTime(sa, hm, mj, clock.now().hour(), clock.now().minute(), clock.now().second()));
-        Serial.println(clock.now().toString('=> YY:MM:DD hh:mm:ss')); // Serial.println(F("Clock adjusted"));
+        Serial.println(clock.now().toString("=> YY:MM:DD hh:mm:ss")); // Serial.println(F("Clock adjusted"));
     }
     // else if(command == F("DAY"))
     // {
