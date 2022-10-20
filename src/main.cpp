@@ -1,10 +1,6 @@
 #include "init_utilities.hpp"
 #include "ConfigMod.hpp"
 #include "SD_Card.hpp"
-
-Collect_params collect_params;
-
-#include "ConfigMod.hpp"
 #include "sensors.hpp"
 
 Collect_params collect_params;
