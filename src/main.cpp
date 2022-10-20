@@ -12,7 +12,9 @@ void setup() {
   check_config();
   led.setColorRGB(0, 0, 255, 0);
   initialisation_interruption_tim(1000);
-  Write_SD_Card();
+  String donnee ;
+  donnee = "une data de, merde sdf sdf sdf, sfd ZPH, Zhghjghjghjghjgjh";
+  Write_SD_Card(donnee);
 }
 
 void loop()
