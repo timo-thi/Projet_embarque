@@ -6,6 +6,8 @@
 #define CS_pin 4
 //#define File_Name "data.csv"
 File myFile;
+RTC_DS1307 Clock;
+
 String File_Name = "data.csv";
 
 void Write_SD_Card(String donnee)
