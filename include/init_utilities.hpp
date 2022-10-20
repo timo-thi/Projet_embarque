@@ -8,8 +8,7 @@
 // Sensor collect params struct
 struct Collect_params {
 	int interval;
-	int last_collect_time;
-	int current_time;
+	unsigned long last_collect_time;
 	bool eco_alternate_gps;
 	int mode;
 	int previous_mode;
@@ -97,8 +96,6 @@ void gps_access_error();
 void rtc_clock_access_error();
 
 // init params
-void init_params();
+void init_params(unsigned long lct);
 
 #endif
-
-
