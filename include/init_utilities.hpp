@@ -1,5 +1,7 @@
 #include <Arduino.h>
 #include "ChainableLED.h"
+#include "RTClib.h"
+#include "eeprom_utilities.hpp"
 #ifndef INIT_UTILITIES_FUNCTIONS
 #define INIT_UTILITIES_FUNCTIONS
 
@@ -69,4 +71,34 @@ void initialisation_interruption_tim(long uSecs);
 extern int timer;
 extern unsigned int configTimeout;
 
+extern int timer;
+extern unsigned int configTimeout;
+
+//Led error handling
+void sd_card_access_error();
+void sd_card_full_error();
+void consistency_data_error();
+void sensor_access_error();
+void gps_access_error();
+void rtc_clock_access_error();
+
+// init params
+void init_params();
+
+extern int timer;
+extern unsigned int configTimeout;
+
+//Led error handling
+void sd_card_access_error();
+void sd_card_full_error();
+void consistency_data_error();
+void sensor_access_error();
+void gps_access_error();
+void rtc_clock_access_error();
+
+// init params
+void init_params();
+
 #endif
+
+

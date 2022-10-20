@@ -1,6 +1,7 @@
 #include <init_utilities.hpp>
 #include <ConfigMod.hpp>
 #include "eeprom_utilities.hpp"
+#include "RTClib.h"
 
 Config_param LOG_INTERVALL = {"LOG_INTERVALL", 0, 10, 1}; //, fetch_eeprom_data(0)};
 Config_param FILE_MAX_SIZE = {"FILE_MAX_SIZE", 2, 4096, 1}; //, fetch_eeprom_data(2)};
@@ -52,12 +53,13 @@ bool wait_for_entry(String *command, int *value, bool *to_store){
         *to_store = true;
         *value = command->substring(pos+1).toInt(); // Isolate value and convert into integer or long.
         *command = command->substring(0, pos); // Isolate command.available()
+        return false;
     }
     else {
         *to_store = false;
         command->trim(); // Remove every parasite end chracters.
+        return false;
     }
-    return false;
 }
 
 void wait_for_param()
@@ -81,6 +83,19 @@ void wait_for_param()
     exec_param(command, value, to_store);
 }
 
+bool extract_clock_param(String data, int *hm, int *mj, int *sa, String separator){
+    /*String contains the command data without the command name*/
+    int pos = data.indexOf(separator);
+    if(pos == -1) return true;
+    *hm = data.substring(0, pos).toInt();
+    data = data.substring(pos+1);
+    pos = data.indexOf(separator);
+    if(pos == -1) return true;
+    *mj = data.substring(0, pos).toInt();
+    *sa = data.substring(pos+1).toInt();
+    return false;
+}
+
 void exec_param(String command, int value, bool to_store)
 {
     for (int i = 0; i < 15; i++){
@@ -88,7 +103,7 @@ void exec_param(String command, int value, bool to_store)
             if (to_store){
                 if (value > params_point[i]->max_value || value < params_point[i]->min_value) {
                     Serial.println(F("Value exceed max or min. Please refer to manual."));
-                    break;
+                    return;
                 }
                 // params_point[i]->value = value;
                 send_eeprom_data(params_point[i]->adr, value); // params_point[i]->value);
@@ -99,6 +114,7 @@ void exec_param(String command, int value, bool to_store)
             return;
         }
     }
+    int hm, mj, sa; // Heure/mois, Minute/jour, Secondes/annee
     if(command == F("RESET"))
     {
         Serial.print(F("Reseting..."));
@@ -110,20 +126,34 @@ void exec_param(String command, int value, bool to_store)
     }
     else if(command == F("VERSION"))
     {
-        Serial.println(F("Version and serial number"));
+        Serial.println(F("V1.0 S:lMPbPj2T"));
     }
     else if(command.startsWith(F("CLOCK")))
     {
-        Serial.println(F("Clock..."));
+        RTC_DS1307 clock;
+        clock.begin();
+        if (extract_clock_param(command.substring(6), &hm, &mj, &sa, ":")){
+            Serial.println(F("Format error"));
+            return;
+        }
+        clock.adjust(DateTime(clock.now().year(), clock.now().month(), clock.now().day(), hm, mj, sa));
+        Serial.println(clock.now().toString("=> YY:MM:DD hh:mm:ss")); // Serial.println(F("Clock adjusted"));
     }
-    else if(command == F("DATE"))
+    else if(command.startsWith(F("DATE")))
     {
-        Serial.println(F("Date..."));
+        RTC_DS1307 clock;
+        clock.begin();
+        if (extract_clock_param(command.substring(5), &hm, &mj, &sa, ",")){
+            Serial.println(F("Format error"));
+            return;
+        }
+        clock.adjust(DateTime(sa, hm, mj, clock.now().hour(), clock.now().minute(), clock.now().second()));
+        Serial.println(clock.now().toString("=> YY:MM:DD hh:mm:ss")); // Serial.println(F("Clock adjusted"));
     }
-    else if(command == F("DAY"))
-    {
-        Serial.println(F("Day..."));
-    }
+    // else if(command == F("DAY"))
+    // {
+    //     Serial.println(F("Day..."));
+    // }
     else
     {
         Serial.println(F("Command not found X"));
