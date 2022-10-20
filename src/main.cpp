@@ -17,21 +17,30 @@ void setup() {
   init_RTC();
   init_buttons();
   check_config();
-  initialisation_interruption_tim(1000);
-  
-
+	led.setColorRGB(0, 0, 255, 0);
+	initialisation_interruption_tim(1000);
 }
 
 void loop()
 {
+	// put your main code here, to run repeatedly:
+	switch (collect_params.mode)
+	{
+		case 1:
+			collect_params.eco_alternate_gps = !collect_params.eco_alternate_gps; // Something else different compring to std mode ?
+			break; // remove if we want to combine std and eco modes ?
+		case 0:
+			// fetch sensor data
+			// check consistency
+			// store in sd card
+			break;
 
-    LightSensor(&a);
-    WeatherSensor(&b, &c, &d, &e);
-    RTC_Clock(&f);
-    Sensors_Tests();
-
-
-
-  // put your main code here, to run repeatedly:
-
+		case 2:
+			// fetch sensor data
+			// print data
+			break;
+		
+		default:
+			break;
+	}
 }
