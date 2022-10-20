@@ -14,7 +14,7 @@ void init_BME280();
 
 void LightSensor(int *lux);
 
-void WeatherSensor(float *temperature, float *humidity, float *pressure, float *altitude);
+void WeatherSensor(float *temperature, float *humidity, float *pressure);
 
 void init_RTC();
 

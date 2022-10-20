@@ -11,13 +11,13 @@ Config_param LUMIN_LOW = {"LUMIN_LOW", 10, 255, 0, 1023}; //, fetch_eeprom_data(
 Config_param LUMIN_HIGH = {"LUMIN_HIGH", 12, 768, 0, 1023}; //, fetch_eeprom_data(10)};
 Config_param TEMP_AIR = {"TEMP_AIR", 14, 1, 0, 1}; //, fetch_eeprom_data(12)};
 Config_param MIN_TEMP_AIR = {"MIN_TEMP_AIR", 16, -10, -40, 85}; //, fetch_eeprom_data(14)};
-Config_param MAX_TEMP_AIR = {"MAX_TEMP_AIR", 16, 60, -40, 85}; //, fetch_eeprom_data(16)};
-Config_param HYGR = {"HYGR", 18, 1, 0, 1}; //, fetch_eeprom_data(18)};
-Config_param HYGR_MINT = {"HYGR_MINT", 20, 0, -40, 85}; //, fetch_eeprom_data(20)};
-Config_param HYGR_MAXT = {"HYGR_MINT", 22, 50, -40, 85}; //, fetch_eeprom_data(22)};
-Config_param PRESSURE = {"PRESSURE", 24, 0, 0, 1}; //, fetch_eeprom_data(24)};
-Config_param PRESSURE_MIN = {"PRESSURE_MIN", 26, 850, 300, 1100}; //, fetch_eeprom_data(26)};
-Config_param PRESSURE_MAX = {"PRESSURE_MAX", 28, 1080, 300, 1100}; //, fetch_eeprom_data(28)};
+Config_param MAX_TEMP_AIR = {"MAX_TEMP_AIR", 18, 60, -40, 85}; //, fetch_eeprom_data(16)};
+Config_param HYGR = {"HYGR", 20, 1, 0, 1}; //, fetch_eeprom_data(18)};
+Config_param HYGR_MINT = {"HYGR_MINT", 22, 0, -40, 85}; //, fetch_eeprom_data(20)};
+Config_param HYGR_MAXT = {"HYGR_MAXT", 24, 50, -40, 85}; //, fetch_eeprom_data(22)};
+Config_param PRESSURE = {"PRESSURE", 26, 0, 0, 1}; //, fetch_eeprom_data(24)};
+Config_param PRESSURE_MIN = {"PRESSURE_MIN", 28, 850, 300, 1100}; //, fetch_eeprom_data(26)};
+Config_param PRESSURE_MAX = {"PRESSURE_MAX", 30, 1080, 300, 1100}; //, fetch_eeprom_data(28)};
 
 Config_param *params_point[15] = {&LOG_INTERVALL, &FILE_MAX_SIZE, &TIMEOUT, &LUMIN, &LUMIN_LOW, &LUMIN_HIGH, &TEMP_AIR, &MIN_TEMP_AIR, &MAX_TEMP_AIR, &HYGR, &HYGR_MINT, &HYGR_MAXT, &PRESSURE, &PRESSURE_MIN, &PRESSURE_MAX};
 
@@ -101,7 +101,7 @@ void exec_param(String command, int value, bool to_store)
     for (int i = 0; i < 15; i++){
         if (command == params_point[i]->name){
             if (to_store){
-                if (value > params_point[i]->max_value || value < params_point[i]->min_value) {
+                if ((value > params_point[i]->max_value && params_point[i]->max_value) || value < params_point[i]->min_value) {
                     Serial.println(F("Value exceed max or min. Please refer to manual."));
                     return;
                 }

@@ -147,10 +147,10 @@ void initialisation_interruption_tim(long uSecs){
 
 
 // collect_params init
-void init_params(){
+void init_params(unsigned long lct){
 	collect_params.interval = fetch_eeprom_data(LOG_INTERVALL.adr);
 	collect_params.eco_alternate_gps = true;
-	collect_params.last_collect_time = 0;
+	collect_params.last_collect_time = lct + collect_params.interval;
 	collect_params.mode = 1;
 	collect_params.previous_mode = 1;
 }
