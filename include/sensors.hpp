@@ -24,4 +24,6 @@ void Sensors_Tests();
 
 extern RTC_DS1307 rtc;
 
+String actTime();
+
 #endif

@@ -67,7 +67,6 @@ void green_button_interrupt(){
 	} else {
 		green_bascule = false;        // else the button isn't pressed anymore
 	}
-
 }
 
 void red_button_interrupt(){
