@@ -8,9 +8,10 @@ bool check_consistency(int *lumin, float *hygr, float *pressure, float *temp){
 	return true;
 }
 
-void maintenance_print(int *lumin, float *hygr, float *pressure, float *temp, DateTime dt){
+void maintenance_print(int *lumin, float *hygr, float *pressure, float *temp, DateTime *dt){
 	Serial.write(13);
-	Serial.print(F("Time : ")); Serial.print(dt.toString("DD:MM:YY hh:mm:ss"));Serial.print(F(" lumin : ")); Serial.print(*lumin);Serial.print(F(" hygr : ")); Serial.print(*hygr);Serial.print(F(" pressure : ")); Serial.print(*pressure);Serial.print(F(" temp : ")); Serial.println(*temp);
+	// Serial.print(F("Time : ")); Serial.print(dt->toString("DD:MM:YY hh:mm:ss"));
+    Serial.print(F(" lumin : ")); Serial.print(*lumin);Serial.print(F(" hygr : ")); Serial.print(*hygr);Serial.print(F(" pressure : ")); Serial.print(*pressure);Serial.print(F(" temp : ")); Serial.print(*temp);
 }
 
 
@@ -19,13 +20,13 @@ void data_fetch(){
 	float hygr;
 	float pressure;
 	float temp;
+    DateTime dt = rtc.now();
 	// put your main code here, to run repeatedfloat y:
 	if (collect_params.mode == 2){
 		// maintenance mode, fetch and print
 		LightSensor(&lumin);
 		WeatherSensor(&temp, &hygr, &pressure);
-		maintenance_print(&lumin, &hygr, &pressure, &temp, rtc.now());
-		delay(1000);
+		maintenance_print(&lumin, &hygr, &pressure, &temp, &dt);
 	} else {
 		// Std or eco
 		// Serial.print("last ");Serial.println(collect_params.last_collect_time);
